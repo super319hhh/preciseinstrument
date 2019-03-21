@@ -1,0 +1,242 @@
+<?php
+	$cond = array(
+		'recruit.recruit_id' => I('r'),
+		'recruit.is_delete' => 'N',
+		'recruit.is_show' => 'Y'
+	);
+	$career = M('recruit')
+	->join('type ON recruit.recruit_type = type.type_id')
+	->join('recruit_position ON recruit.position_id = recruit_position.position_id')
+	->where($cond)
+	->field('position_name,type_id,type_name,recruit.position_id')
+	->find();
+?>
+<include file="Layout:header" />
+<link href="__APPLICATION__/css/career_apply.css" rel="stylesheet" type="text/css"/>
+<link href="__HADMIN__/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<div class="main-pic">
+	<img src="__APPLICATION__/img/career.png" width="100%" alt="">
+</div>
+<div class="career">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li><a href="{:U('Home/career')}"><?php echo $language['career'] ?></a></li>
+			<li><a href="__MODULE__/Home/career?t={$career['type_id']}">{$career['type_name']}</a></li>
+			<li class="active"><?php echo $language['recruit_btn_2'] ?></li>
+		</ol>
+		<div class="career-apply">
+			<div class="apply-position">
+				<?php echo $language['career_apply'] ?><span>{$career['position_name']}</span>
+			</div>
+			<div class="apply-content">
+				<form id="jobApply">
+					<table class="apply-content--table" width="100%" border="1" frame="box">
+						<tbody>
+							<tr>
+								<td style="min-width: 55px;"><?php echo $language['app_name'] ?></td>
+								<td><input type="text" name="name" required></td>
+								<td style="min-width: 55px;"><?php echo $language['app_sex'] ?></td>
+								<td><input type="text" name="sex" required></td>
+								<td style="min-width: 55px;"><?php echo $language['app_age'] ?></td>
+								<td><input type="text" name="origin" required></td>
+							</tr>
+							<tr>
+								<td><?php echo $language['app_birthplace'] ?></td>
+								<td><input type="text" name="native_place" required></td>
+								<td><?php echo $language['app_nation'] ?></td>
+								<td><input type="text" name="nation" required></td>
+								<td><?php echo $language['app_education'] ?></td>
+								<td><input type="text" name="education_level" required></td>
+							</tr>
+							<tr>
+								<td><?php echo $language['app_political'] ?></td>
+								<td><input type="text" name="political" required></td>
+								<td><?php echo $language['app_g_date'] ?></td>
+								<td><input type="text" name="graduation_date" required></td>
+								<td><?php echo $language['app_marriage'] ?></td>
+								<td><input type="text" name="marital_status" required></td>
+							</tr>
+							<tr>
+								<td><?php echo $language['app_school'] ?></td>
+								<td><input type="text" name="graduate_institutions_professional" required></td>
+								<td><?php echo $language['app_qualification'] ?></td>
+								<td><input type="text" name="major" required></td>
+								<td><?php echo $language['app_lan'] ?></td>
+								<td><input type="text" name="language_proficiency" required></td>
+							</tr>
+							<tr>
+								<td><?php echo $language['app_phone'] ?></td>
+								<td><input type="text" name="contact_number" required></td>
+								<td><?php echo $language['app_residence'] ?></td>
+								<td><input type="text" name="registered_permanent_residence" required></td>
+								<td><?php echo $language['app_position'] ?></td>
+								<td><input type="text" name="jobapp_position" required></td>
+							</tr>
+							<tr>
+								<td><?php echo $language['app_skills'] ?></td>
+								<td colspan="5"><input type="text" name="skills"></td>
+							</tr>
+							<tr>
+								<td><?php echo $language['app_address'] ?></td>
+								<td colspan="5"><input type="text" name="home"></td>
+							</tr>
+							<tr>
+								<td colspan="6"><?php echo $language['app_exp'] ?></td>
+							</tr>
+							<tr class="experience">
+								<td colspan="6">
+									<textarea name="exp"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="6"><?php echo $language['app_awards'] ?></td>
+							</tr>
+							<tr class="prize">
+								<td colspan="6">
+									<textarea name="award"></textarea>
+								</td>
+							</tr>
+							<tr class="fun">
+								<td colspan="6">
+									<label><?php echo $language['app_fun'] ?>：</label>
+									<textarea name="special_hobby"></textarea>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<input type="hidden" name="jobapp_type" value="{$career['type_id']}">
+					<input type="hidden" name="jobapp_position" value="{$career['position_id']}">
+				</form>
+			</div>
+			<div class="apply-btn">
+				<button type="button" id="jobApplySubmit" class="apply-submit btn btn-info"><?php echo $language['app_btn'] ?></button>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__APPLICATION__/js/jquery.validate.min.js"></script>
+<script src="__APPLICATION__/js/messages_zh.js"></script>
+<script src="__HADMIN__/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		function getCookie(name){
+			var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+			if(arr=document.cookie.match(reg))
+				return unescape(arr[2]);
+			else
+				return null;
+		}
+		if (getCookie('lan') == 'EN') {
+			 	msg = '*',
+				app_title = 'To submit your job application',
+				app_text = 'Thank you for your attention',
+				res_title = 'Your resume has been sent, please patience to wait for the results',
+				confirmButtonText = 'OK',
+				cancelButtonText = 'Cancel';
+		} else {
+			 	msg = '*必填',
+				app_title = '即将提交您的职位申请',
+				app_text = '感谢您的关注',
+				res_title = '您的简历已发送，请耐心等待结果',
+				confirmButtonText = '确定',
+				cancelButtonText = '取消';
+		}
+		$("#jobApply").validate({
+			// errorElement: "",
+			errorPlacement: function(error, element) {
+				$( element ).parent().append( error );
+			},
+			onfocusout: function(element) { $(element).valid(); }, //当丢失焦点时才触发验证请求
+		    messages:{
+	            name:{
+	                required: msg
+	            },
+	            sex:{
+	                required: msg
+	            },
+	            origin:{
+	                required: msg
+	            },
+	            native_place:{
+	                required: msg
+	            },
+	            nation:{
+	                required: msg
+	            },
+	            education_level:{
+	                required: msg
+	            },
+	            political:{
+	                required: msg
+	            },
+	            graduation_date:{
+	                required: msg
+	            },
+	            marital_status:{
+	                required: msg
+	            },
+	            graduate_institutions_professional:{
+	                required: msg
+	            },
+	            major:{
+	                required: msg
+	            },
+	            language_proficiency:{
+	                required: msg
+	            },
+	            contact_number:{
+	                required: msg
+	            },
+	            registered_permanent_residence:{
+	                required: msg
+	            },
+	            jobapp_position:{
+	                required: msg
+	            },
+	        }
+		});
+	});
+	$('#jobApplySubmit').click(function(event) {
+		$("#jobApply").submit();
+	});
+	$.validator.setDefaults({
+		submitHandler: function() {
+			var formData = $("#jobApply").serialize();
+
+			swal({
+				title: app_title,
+				text: app_text,
+				type: "info",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				showLoaderOnConfirm: true,
+				confirmButtonText: confirmButtonText,
+				cancelButtonText: cancelButtonText,
+			},function(){
+				$.ajax({
+					cache: true,
+					type: "POST",
+					url: '__URL__/newApply',
+					data: formData,
+					dataType:"json",
+					async: true,
+					success: function(result) {
+						if (result.status == 1) {
+							swal({
+								title: res_title,
+								type: "success"
+							},
+							function(isConfirm){
+								if (isConfirm) {
+									location.href="__URL__/career";
+								}
+							});
+						}
+					}
+				});
+			});
+		}
+	});
+</script>
+<include file="Layout:footer" />
+

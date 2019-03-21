@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>新闻管理</title>
+		<!--CSS-->
+		<link rel="shortcut icon" href="favicon.ico"> 
+	    <link href="__HADMIN__/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+	    <link href="__HADMIN__/css/animate.css" rel="stylesheet">
+	    <link href="__HADMIN__/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="__HADMIN__/css/plugins/dataTables/jquery.dataTables.min.css" rel="stylesheet"/>
+		<link href="__HADMIN__/css/bootstrap.min.css" rel="stylesheet">
+		<link href="__HADMIN__/js/plugins/SweetAlert2/dist/sweetalert2.min.css" rel="stylesheet" />
+		<link href="__HADMIN__/css/plugins/summernote/summernote.css" rel="stylesheet" />
+		<link href="__HADMIN__/css/plugins/summernote/summernote-bs3.css" rel="stylesheet" />
+		<link href="__HADMIN__/css/plugins/select2/css/select2.min.css" rel="stylesheet" />
+		
+		
+		
+		<!--JS-->
+	    <script src="__HADMIN__/js/jquery.min.js"></script>
+	    <script src="__HADMIN__/js/bootstrap.min.js"></script>
+	    <script src="__HADMIN__/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	    <script src="__HADMIN__/js/plugins/layer/layer.min.js"></script>
+	    <!--ueditor富文本编辑器-->
+		<script src="__HADMIN__/js/plugins/summernote/summernote.min.js"></script>
+		<script src="__HADMIN__/js/plugins/summernote/summernote-zh-CN.js"></script>
+		<!--databales-->
+		<script src="__HADMIN__/js/plugins/dataTables/jquery.dataTables.min.js"></script>
+		<script src="__HADMIN__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+		<script src="__HADMIN__/js/plugins/SweetAlert2/dist/sweetalert2.min.js" type="text/javascript"></script>
+		
+		<script src="__HADMIN__/js/plugins/select2/js/select2.full.js"></script>
+		
+		<include file="Home@Layout/preFunction" />
+		<style type="text/css">
+			 /*重置sb-admin箭头样式*/
+	        .table.dataTable thead .sorting_asc:after,
+	        .table.dataTable thead .sorting_desc:after,
+	        .table.dataTable thead .sorting:after{
+	            content: "";
+        }
+		</style>
+	</head>
+	<body>
+	<div class="container-fluid wrapper wrapper-content">			
+		<div class="row">
+			<div class="ibox">
+			    <div class="ibox-title" style="height: 65px;">
+			        <h1>新闻管理</h1>
+			    </div>
+			</div>
+		</div><!--.row面包屑导航-->
+		<nav class="navbar navbar-default" role="navigation">
+		    <div class="container-fluid">
+		    <div class="navbar-header">
+		        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example-navbar-collapse">
+		            <span class="sr-only">切换导航</span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		        </button>
+		    </div>
+		    <div class="collapse navbar-collapse" id="example-navbar-collapse">
+		        <ul class="nav navbar-nav ceshi">
+		            <li class="active" attrid="101"> <a href="#">全部</a></li>
+		            <li attrid="102"><a href="#">公司动态</a></li>
+		            <li attrid="103"><a href="#">知识百问</a></li> 
+		            <li attrid="106"><a href="#">促销信息</a></li> 
+		            <li attrid="104"><a href="#">中文</a></li>
+		            <li attrid="105"><a href="#">英文</a></li>
+		
+		        </ul>
+				<button type="button" class="btn btn-info" data-toggle="modal" href="#add" style="float: right; margin: 10px 15px 10px 0;">
+					添加文章
+				</button>
+		    </div>
+		    </div>
+		</nav>
+	
+		<div class="row wrapper wrapper-content " >
+			<div class="">
+				<table class="table table-bordered table-hover  table-striped" id="messages" style="">
+					<thead>
+						<tr style="font-size: 16px;">
+							<th width="20%" style="text-align:center;">标题</th>
+							<th width="15%" style="text-align:center;">详细内容</th>
+							<th width="10%" style="text-align:center;">文章类型</th>
+							<th width="5%" style="text-align:center;">语言</th>
+							<th width="10%" style="text-align:center;">创建时间</th>
+							<th width="9%"  style="text-align:center;">点击量</th>
+							<th width="7%"  style="text-align:center;">修改</th>
+							<th width="7%"  style="text-align:center;">删除</th>
+							<th width="7%"  style="text-align:center;">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+<!--详情-->
+			<div class="modal fade" id="xiangxi"   tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog"style="width: 80%;">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+										aria-hidden="true">×
+								</button>
+								<h2 class="modal-title" id="myModalLabel">
+									文章详细内容
+								</h2>
+							</div>
+							<div class="modal-body">
+									<div id="passage" style="padding: 20px;">
+									</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">
+									关闭
+								</button>
+							</div>
+						</div><!-- /.modal-content -->
+					</div><!-- /.modal-dialog -->
+				</div>
+<!--创建-->				
+			<div class="modal fade" id="add"        role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog"style="width: 80%;">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+										aria-hidden="true">×
+								</button>
+								<h2 class="modal-title" id="myModalLabel">
+									创建文章
+								</h2>
+							</div>
+							<div class="modal-body">
+								<div class="" style="width: 100%; height: 500px;">
+									<div class="row col-lg-12" style="font-size: 20px; margin-bottom: 20px;">
+										<div class="" >
+											<div class="col-lg-6">
+												请输入文章标题: &nbsp;&nbsp; <input type="text" id="inputtitle" class="input-large" style="border-radius:5px; padding-left: 10px;">
+											</div>
+											<div class="col-lg-6">
+												请选择文章类型: &nbsp;&nbsp;
+													<select name="" id="tp" style="width: 224px;height: 33px; border-radius:5px; padding-left: 10px;">
+														<volist name="type" id="vos">
+															<option value="{$vos.type_id}"> {$vos.type_name} </option>
+														</volist>
+													</select> 
+											</div>
+										</div>
+										<br>
+										<br> 
+										<div class="col-lg-6" style="padding-top: 5px;">
+											请选择文章语言:&nbsp;&nbsp;
+											<label id="lange" >
+												<input name="Fruit" type="radio" value="ZH"  checked="checked"/>中文 &nbsp; 
+												<input name="Fruit" type="radio" value="EN" />英文 
+											</label> 
+										</div>
+										<div class="col-lg-6" style="padding-top: 5px;">
+											请选择是否显示:&nbsp;&nbsp;
+											<label id="lange-show-type" >
+												<input name="show-type" type="radio" value="Y"  checked="checked"/>显示 &nbsp;
+												<input name="show-type" type="radio" value="N" />隐藏
+											</label> 
+										</div>
+										<br>
+										<br>
+									</div>
+									
+									<div class="row col-lg-12" >
+										<div class="" id="add_fwb" >
+										
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-success" data-dismiss="modal" id="add-suss">
+									确定
+								</button>
+								<button type="button" class="btn btn-danger" data-dismiss="modal">
+									关闭
+								</button>
+							</div>
+						</div><!-- /.modal-content -->
+					</div><!-- /.modal-dialog -->
+				</div>
+<!--修改-->				
+			<div class="modal fade" id="edit-mdol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog"style="width: 80%;">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+										aria-hidden="true">×
+								</button>
+								<h2 class="modal-title" id="myModalLabel">
+									编辑文章
+								</h2>
+							</div>
+							<div class="modal-body">
+								<div class="" style="width: 100%; height: 500px;">
+									<div class="row col-lg-12" style="font-size: 20px; margin-bottom: 20px;">
+										<div class="">
+											<div class="col-lg-6">
+												文章标题: &nbsp; &nbsp;<input type="text" id="inputtitle-x" class="input-large " value=""style="border-radius:5px; padding-left: 10px;">
+											</div>
+											<div class="col-lg-6">
+												文章类型:&nbsp;&nbsp;
+												<select name=""  id="xgselect"  style="width: 224px;height: 33px; border-radius:5px; padding-left: 10px;">
+													<volist name="type" id="vo" >
+														<option value="{$vo.type_id}"> {$vo.type_name} </option>
+													</volist>
+												</select> 
+											</div>
+										</div>
+										<br> 
+										<br>
+										<div class="col-lg-6" style="padding-top: 5px;">
+											文章语言:&nbsp;&nbsp;
+											<label>
+												<input name="Fruit-x" type="radio" value="ZH"  id="zh-input"/>中文  &nbsp;
+												<input name="Fruit-x" type="radio" value="EN"  id="en-input"/>英文 
+											</label> 
+											<input id="Fruit-x-id" type="hidden"/> 
+										</div>
+										<div class="col-lg-6" style="padding-top: 5px;">
+											是否显示: &nbsp;&nbsp; 
+											<label id="lange-show-type">
+												<input name="show-type-x" type="radio" value="Y" />显示  &nbsp;
+												<input name="show-type-x" type="radio" value="N" />隐藏
+											</label> 
+										</div>
+										<br>
+										<br>
+									</div>
+									<div class="row col-lg-12" >
+										<div class="" id="add_fwb-x" >
+											
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-success" data-dismiss="modal" id="add-suss-x">
+									确定
+								</button>
+								<button type="button" class="btn btn-danger" data-dismiss="modal">
+									关闭
+								</button>
+							</div>
+						</div><!-- /.modal-content -->
+					</div><!-- /.modal-dialog -->
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	
+<script type="text/javascript">
+	 var Messages;
+	 var id=101;
+	 $(document).ready(function() {
+			var tableHeight = document.body.clientHeight * 0.6 + 'px';
+			Messages=$("#messages").DataTable({
+				"bProcessing": true,
+				"sPaginationType": "full_numbers",
+				"scrollY": tableHeight,
+				"order": [[3, "desc"]],
+//				"ordering": false,
+				/*自定义语言*/
+				"oLanguage": {
+					"sProcessing": "正在加载数据...",
+					"sLengthMenu": "每页显示 _MENU_ 条记录",
+					"sZeroRecords": "抱歉， 没有找到",
+					"sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+					"sInfoEmpty": "",
+					"sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+					"oPaginate": {
+						"sFirst": "首页",
+						"sPrevious": "前一页",
+						"sNext": "后一页",
+						"sLast": "尾页"
+					},
+					"sZeroRecords": "还没有文章，快去创建吧！",
+					"sSearch": "搜索",
+				},
+				/*请求方法*/
+				"ajax":{
+					"url":"__URL__/getmessages",
+					"data":'sdasd',
+				},
+				/*向后台传参*/
+				"fnServerParams": function(aoData) {
+					aoData.push({
+						"name": "id",
+						"value": id
+					});
+				},
+				"aoColumns": [
+					{"mData": "message_title"},
+					{
+						"data": "message_id",
+						'sClass': "text-center",
+						"render": function(data, type, full, meta){
+							return data = '<a href="#xiangxi" id="xiangx" data-toggle="modal" attrid="' + data + '">查看详情</a>'
+						}
+					},
+					{
+						"mData": "type_name",
+						'sClass': "text-center",
+					},
+					{
+						"data": "language",
+						'sClass': "text-center",
+						"render": function(data, type, full, meta){
+							if(full.language == 'ZH' ) {
+								return data = '中文';        
+							}else if(full.language == 'EN'){
+								return data = '英文';            
+							}
+						}
+					},
+					{
+						"mData": "post_date",
+						'sClass': "text-center",
+					},
+					{
+						"mData": "view_times",
+						'sClass': "text-center",
+					},
+					{
+						"data": "message_id",
+						'sClass': "text-center",
+						"render": function(data, type, full, meta){
+							return data = '<button type="button" class="btn btn-success" id="edit" data-toggle="modal" href="#edit-mdol"  attrid="' + data +'">修改</button>'
+						}
+					},{
+						"data": "message_id",
+						'sClass': "text-center",
+						"render": function(data, type, full, meta){
+							return data = '<button type="button" class="btn btn-danger"  id="drop" attrid="' + data +'">删除</button>' 
+						}
+					},
+						{
+						"data": "message_id",
+						'sClass': "text-center",
+						"render": function(data, type, full, meta){
+							if(full.is_show == 'N' ) {
+								return data = '<button type="button" class="btn btn-warning"   id="show-caocuo" attrid="' + data +'">已隐藏</button>'          
+							}else if(full.is_show == 'Y'){
+								return data = '<button type="button" class="btn btn-success"  id="hide-caozuo" attrid="' + data +'">已显示</button>'             
+							}
+						}
+					},
+				],
+			});
+		});
+		
+		
+//		$("#tp").select2()
+//删除
+	$('.table').on('click','#drop',function(){
+		var id=$(this).attr('attrid');
+		var table1=$("#messages").DataTable();
+		swal({
+        title: '确定删除?',
+        text: "",
+        type:'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '确认',
+	    cancelButtonText: '取消',
+        }).then(function(isConfirm) {
+            if(isConfirm) {
+				loading.add();
+            	$.ajax({
+		            type: "get",
+		            url: "__URL__/drop",
+		            data: {dadel:id},
+		            success: function (data) {
+		            	if(data==true){
+		            		swal("删除成功!", "", "success").then(function(isConfirm) {
+				             		table1.ajax.reload();
+			            	})
+		            		loading.remove();
+						}else{
+				     		sweetAlert(
+							  '出错了...',
+							  '删除失败!',
+							  'error'
+							)
+				     		loading.remove();
+				     	}
+		            },
+    			});
+    	    }
+       })
+	})
+//点击显示
+	$('.table').on('click','#show-caocuo',function(){
+		var sid=$(this).attr('attrid');
+		var table1=$("#messages").DataTable();
+		swal({
+        title: '确定显示文章?',
+        text: "",
+        type:'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '确认',
+	    cancelButtonText: '取消',
+        }).then(function(isConfirm) {
+            if(isConfirm) {
+				loading.add();
+            	$.ajax({
+		            type: "get",
+		            url: "__URL__/isshow",
+		            data: {'dasid':sid},
+		            success: function (data) {
+		            	if(data==true){
+		            		swal("操作成功!", "", "success").then(function(isConfirm) {
+				             		table1.ajax.reload();
+			            	})
+				     		loading.remove();
+						}else{
+				     		sweetAlert(
+							  '出错了...',
+							  '操作失败!',
+							  'error'
+							)
+				     		loading.remove();
+				     	}
+		            },
+    			});
+    	    }
+       })
+	})	
+//点击隐藏	
+	$('.table').on('click','#hide-caozuo',function(){
+		var hid=$(this).attr('attrid');
+		var table1=$("#messages").DataTable();
+		swal({
+        title: '确定隐藏文章?',
+        text: "",
+        type:'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '确认',
+	    cancelButtonText: '取消',
+        }).then(function(isConfirm) {
+            if(isConfirm) {
+				loading.add();
+            	$.ajax({
+		            type: "get",
+		            url: "__URL__/isheid",
+		            data: {'dahid':hid},
+		            success: function (data) {
+		            	if(data==true){
+		            		swal("操作成功!", "", "success").then(function(isConfirm) {
+				             		table1.ajax.reload();
+			            	})
+		            		loading.remove();
+						}else{
+				     		sweetAlert(
+							  '出错了...',
+							  '操作失败!',
+							  'error'
+							)
+				     		loading.remove();
+				     	}
+		            },
+    			});
+    	    }
+       })
+	})
+	
+	
+	
+	
+	
+//查看详细信息
+	$('.table').on('click','#xiangx',function(){
+		var id=$(this).attr('attrid');
+		
+		$.ajax({
+            type: "get",
+            url: "__URL__/show",
+            data: {dataid:id},
+            success: function (data) {
+             	if(data){
+	               $("#passage").append(data);
+             	}else{
+             		swal(
+					  '出错了...',
+					  '连接失败!',
+					  'error'
+					)
+             	}
+            },
+    	});
+	})
+
+//设置富文本编辑器//////////////////////////////////////	
+//初始化添加分文本
+	$("#add_fwb").summernote({
+			height: 300,                 
+			minHeight: 200,             
+			maxHeight: null,            
+			focus: true   
+		});
+/////////////////////////////////////////////////////
+//添加		
+	$('#add-suss').click(function(){
+		var title=$("#inputtitle").val();
+		var	langer=$('input[name="Fruit"]:checked').val();
+		var tex=$('#add_fwb').code();
+		var tp=$("#tp").val();
+		var showtp=$('input[name="show-type"]:checked').val();
+		var table1=$("#messages").DataTable();
+		if( title == ''){
+       		 return swal({
+	            title: '请输入文章标题!',
+	            text: '',
+	            type: 'warning',
+	            timer: 3000
+	     		})
+        }
+		if( tex.length < 1){
+       		 return swal({
+	            title: '请输入文章内容!',
+	            text: '',
+	            type: 'warning',
+	            timer: 3000
+	     		})
+        }
+		loading.add();
+		$.ajax({
+			type:"post",
+			url:"__URL__/add",
+			data:{
+				'datt':title,
+            	'dala':langer,
+            	'datex':tex,
+            	'datetp':tp,
+            	'showtp':showtp,
+			},
+			success:function(data){
+				if(data==true){
+         			swal("添加成功!", "", "success").then(function(isConfirm) {
+		             		table1.ajax.reload();
+	            	})
+         			loading.remove();
+             	}else{
+             		swal(
+					  '出错了...',
+					  '添加失败!',
+					  'error'
+					)
+             		loading.remove();
+             	}
+			}
+		});
+	})
+	//获取修改数据
+	$('.table').on('click','#edit',function(){
+		var id=$(this).attr('attrid');
+		loading.add();
+            	$.ajax({
+		            type: "get",
+		            url: "__URL__/enitdata",
+		            data: {'dadel':id},
+		            dataType:'JSON ',
+		            success: function (data) {
+		            	$("#Fruit-x-id").attr('value',data.message_id);
+		            	$("#inputtitle-x").attr('value',data.message_title);
+		            	if(data.language == 'ZH'){
+		            		$('input[name="Fruit-x"]')[0].checked="checked";
+		            	}else if(data.language == 'EN'){
+		            		$('input[name="Fruit-x"]')[1].checked="checked";
+		            	}
+		            	if(data.is_show == 'Y'){
+		            		$('input[name="show-type-x"]')[0].checked="checked";
+		            	}else if(data.is_show == 'N'){
+		            		$('input[name="show-type-x"]')[1].checked="checked";
+		            	}
+		            	
+		            	$('#add_fwb-x').html(data.message_content);
+		            	
+		            	$('#add_fwb-x').summernote({
+		            		height: 300,                 
+							minHeight: 200,             
+							maxHeight: null,            
+							focus: true 
+		            	});
+		            	for(var i=0;i<$('#xgselect option').length;i++){
+		            		if($('#xgselect option').eq(i).val() == data.type_id){
+		            			$('#xgselect option').eq(i).attr('selected',true)
+		            		}
+		            	}
+             		loading.remove();
+		            },
+    			});
+       })
+//修改
+	$('#add-suss-x').click(function(){
+		var xid=$("#Fruit-x-id").val();
+		var xtitle=$("#inputtitle-x").val();
+		var	xlanger=$('input[name="Fruit-x"]:checked').val();
+		var xtex=$('#add_fwb-x').code();
+		var tp=$("#xgselect").val();
+		var xshowtp=$('input[name="show-type-x"]:checked').val();
+		var table1=$("#messages").DataTable();
+		loading.add();
+		$.ajax({
+			type:"post",
+			url:"__URL__/edit",
+			data:{
+				'xid':xid,
+				'xdatt':xtitle,
+            	'xdala':xlanger,
+            	'xdatex':xtex,
+            	'xgselect':tp,
+            	'xshowtp':xshowtp,
+			},
+			success:function(data){
+				if(data==true){
+         			swal("修改成功!", "", "success").then(function(isConfirm) {
+		             		table1.ajax.reload();
+	            	})
+             		loading.remove();
+             	}else{
+             		swal(
+					  '出错了...',
+					  '修改失败!',
+					  'error'
+					)
+             		loading.remove();
+             	}
+			}
+		});
+	})
+	$('.ceshi li').click(function(){
+		//判断下是否已经选中，选中了再点击不发送请求
+		var _selected = $(this).hasClass('active');
+		//去掉所有选中
+		$(this).parent().children().removeClass('active');
+		//再将自己选中
+		$(this).addClass('active')
+		id=$(this).attr('attrid');
+		var table1=$("#messages").DataTable();
+//		$.ajax({
+//			type:"get",
+//			url:"__URL__/getmessages",
+//			data:{
+//				'id':id,
+//			},
+//			success:function(data){
+		        table1.ajax.reload();
+//			}
+//		});
+		console.log(id);
+	})
+		
+
+
+
+//清空展示模态框
+	$('#xiangxi').on('hidden.bs.modal', function (e) {
+		  $("#passage").empty();
+	})
+
+//清空编辑模态框		
+	$('#edit-mdol').on('hidden.bs.modal', function (e) {
+		$('#add_fwb-x').destroy();
+		$('#add_fwb-x').html();
+		$("#inputtitle-x").value = '';
+		$("#Fruit-x-id").value = '';
+	})
+	
+</script>
+	</body>
+</html>

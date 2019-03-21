@@ -1,0 +1,148 @@
+<include file="Layout:header" />
+<link href="__APPLICATION__/css/main.css" rel="stylesheet" type="text/css"/>
+<!-- <block name="banner"> -->
+	<div id="adaptive" style="position: relative;">
+        <ul>
+			<volist name="banners" id="vo">
+				<li attr-id="{$vo['banner_id']}"><a href="{$vo['link']}"><img width="100%" src="{$vo['pic_url']}"></a></li>
+			</volist>
+        </ul>
+    </div>
+<!-- </block> -->
+<!-- <div class="reload clearfix"> -->
+
+	<!-- welcome -->
+	<div class="welcome">
+		<div class="container">
+			<h3><?php echo $language['wel_title'] ?></h3>
+			<p><?php echo $language['wel_brief'] ?></p>
+		</div>
+	</div>
+	<div class="welcome-bottom">
+		<div class="container">
+			<div class="col-md-6 col-sm-12 wel-img">
+				<a href="" class="mask">
+			     	<img src="__APPLICATION__/img/wel_bg.png" class="img-responsive zoom-img" alt="">
+				</a>
+			</div>
+			<div class="col-md-6 col-sm-12 wel-text">
+				<p><?php echo $language['wel_content_1'] ?></p>
+				<p><?php echo $language['wel_content_2'] ?></p>
+			</div>
+		</div>
+	</div>
+
+	<!--产品展示-->
+	<div class="index-portfilio">
+		<div class="container">
+			<h3><?php echo $language['pros_title'] ?></h3>
+			<p class="index-p"><?php echo $language['pros_content'] ?></p>
+			<div class="grid">
+				<volist name="pros" id="vo">
+					<a href="__MODULE__/ProductManage/product_manage?product_id={$vo['product_id']}&page=index_{$key}">
+						<figure class="effect-layla">
+							<img src="{$vo['main_pic']}" alt=""/>
+							<figcaption>
+								<p>{$vo['product_name']}</p>
+							</figcaption>
+						</figure>
+					</a>
+				</volist>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 最新动态 -->
+	<div class="news">
+		<div class="container">
+			<h3 class="m_1"><?php echo $language['news_title'] ?></h3>
+			<ul class="news-list">
+				<volist name="news" id="vo">
+					<li><a href="__MODULE__/Home/new_detail?r={$vo['message_id']}">
+						<p>
+							<span style="width: 75%;">{$vo['message_title']}</span>
+							<span style="width: 25%; text-align: right;">{$vo['post_date']|strtotime|date="Y-m-d",###}</span>
+						</p>
+					</a></li>
+				</volist>
+				<li><a href="{:U('News/index')}" class="more"><?php echo $language['news_more'] ?></a></li>
+			</ul>
+		</div>
+	</div>
+	<!-- 联系我们 -->
+	<div class="contact_us">
+		<div class="container">
+			<h3 class="m_1"><?php echo $language['contact_title'] ?></h3>
+			<div class="grid">
+				<figure>
+					<iframe width="100%" height="100%" frameborder="0" src="{:U('Home/map')}" scrolling="no" seamless></iframe>
+				</figure>
+				<figure>
+					<div class="company-info">
+						<dl>
+							<dt><?php echo $language['company_name'] ?>：</dt>
+							<dd>
+								{$company['company_name']}
+							</dd>
+						</dl>
+						<dl>
+							<dt><?php echo $language['company_add'] ?>：</dt>
+							<dd>
+								{$company['company_address']}
+							</dd>
+						</dl>
+						<dl>
+							<dt><?php echo $language['company_zip'] ?>：</dt>
+							<dd>
+								{$company['zip']}
+							</dd>
+						</dl>
+						<dl>
+							<dt><?php echo $language['company_tel'] ?>：</dt>
+							<dd>
+								{$company['tel']}
+							</dd>
+						</dl>
+						<dl>
+							<dt><?php echo $language['company_fax'] ?>：</dt>
+							<dd>
+								{$company['fax']}
+							</dd>
+						</dl>
+						<dl>
+							<dt><?php echo $language['company_mail'] ?>：</dt>
+							<dd>
+								{$company['mail']}
+							</dd>
+						</dl>
+					</div>
+				</figure>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+<!-- </div> -->
+<script type="text/javascript" src="__APPLICATION__/vendor/terseBanner/dist/jquery.terseBanner.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#adaptive').terseBanner({
+			adaptive: true,
+			height: '500px',
+			auto: 3000,
+			useHover: true
+		});
+	});
+	//计算Banner点击量
+	$('#adaptive ul li').click(function () {
+		var bannerId = {};
+			bannerId['banner_id']=$(this).attr('attr-id');
+		$.ajax({
+			type:'post',
+			data:bannerId,
+			url:"__URL__/BannerClick",
+			dataType:'json',
+		});
+	})
+</script>
+<include file="Layout:footer" />

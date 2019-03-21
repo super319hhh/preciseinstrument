@@ -1,0 +1,107 @@
+body,.header{
+	min-width: 480px;
+}
+input, textarea{
+	outline: none;
+}
+.breadcrumb{
+	margin: 3em 0;
+    padding: 10px 20px;
+}
+.breadcrumb a {
+    color: #00A8C4 !important;
+}
+.apply-position{
+	padding-left: 20px;
+	margin-top: 46px;
+	margin-bottom: 14px;
+}
+.apply-position span{
+	display: inline-block;
+	margin-left: 15px;
+	padding: 8px 20px;
+	border: 1px solid #E4E4E4;
+}
+.apply-content--table{
+	text-align: center;
+	border-color: #CCC;
+}
+.apply-content--table tr{
+	height: 48px;
+}
+.apply-content--table input,
+.apply-content--table textarea{
+	border: none;
+	width: 100%;
+}
+.apply-content--table input{
+	height: 48px;
+	text-align: center;
+}
+.apply-content--table textarea{
+	resize: none;
+	padding: 10px 20px;
+}
+.apply-content--table .experience,
+.apply-content--table .experience textarea{
+	height: 325px;
+	vertical-align: middle;
+}
+.apply-content--table .prize,
+.apply-content--table .prize textarea{
+	height: 358px;
+	vertical-align: middle;
+}
+.apply-content--table .fun,
+.apply-content--table .fun textarea{
+	height: 92px;
+	vertical-align: middle;
+}
+.apply-content--table .fun label{
+	position: absolute;
+	padding: 10px 20px;
+	font-weight: normal;
+}
+.apply-content--table .fun textarea{
+	text-indent: 145px;
+}
+.apply-btn{
+	text-align: center;
+}
+.apply-submit{
+	padding: 10px 50px;
+	font-size: 1.5em;
+	margin: 5em 0;
+}
+/*验证错误信息*/
+.apply-content--table td{
+	position: relative;
+}
+label.error{
+	position: absolute;
+	right: 10px;
+	top: 25%;
+	font-weight: 500;
+	color: #F20;
+}
+@media(max-width:480px) {
+	.breadcrumb{
+		margin: 2em 0;
+		padding: 10px;
+	}
+	.career-detail{
+		padding-left: 0;
+		min-height: 15em;
+	}
+	.apply-position{
+		margin-top: 0;
+	}
+	.apply-content{
+		font-size: 10px;
+	}
+}
+@media(max-width:768px) {
+	.apply-content{
+		font-size: 12px;
+	}
+}

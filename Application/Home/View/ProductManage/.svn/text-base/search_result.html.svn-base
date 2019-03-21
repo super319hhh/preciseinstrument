@@ -1,0 +1,41 @@
+<include file="Layout:header" />
+<block name="cotent">
+    <div style="margin-bottom: 88px">
+        <img src="__APPLICATION__/img/4.png" width="100%"/>
+        <div class="input-group container biank" >
+            <input type="text" class="form-control input-lg" id="seach-input" placeholder="{$placeholder}" value="{$search}"><span class="input-group-addon btn btn-info" id="add-search">{$searchName}</span>
+        </div>
+    </div>
+    <link href="__APPLICATION__/css/product.css" rel="stylesheet" type="text/css"/>
+    <link href="__APPLICATION__/css/main.css" rel="stylesheet" type="text/css"/>
+    <div id="contents"style="margin-top: -88px">
+        <div id="result">
+            <span>{$count}</span>
+            <ul >
+                <volist name="res" id="vo">
+                    <li id="res{$key}" style=""><a href="__URL__/product_manage?product_id={$vo.product_id}">{$vo.product_name}</a></li>
+                </volist>
+            </ul>
+        </div>
+
+    </div>
+    <nav style="text-align: center">
+        <ul class="pagination">
+            {$pageRes}
+        </ul>
+    </nav>
+</block>
+<script>
+    $('#type ul li').eq(0).addClass('active');
+    $('.active a b').css('color','#00a8c4');
+    $('.active a b').css('border-bottom','solid 3px #00a8c4');
+    $('#add-search').click(function () {
+        var val = $('#seach-input').val();
+        if(val == '')
+        {
+            return alert('{$alert}');
+        }
+        location.href = '__URL__/search_result?search='+val;
+    })
+</script>
+<include file="Layout:footer" />

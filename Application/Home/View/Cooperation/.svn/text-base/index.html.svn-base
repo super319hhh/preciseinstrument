@@ -1,0 +1,30 @@
+<include file="Layout:header" />
+		<link rel="stylesheet" type="text/css" href="__APPLICATION__/css/cooperation.css"/>
+
+	<div>
+		<img class="main-pic" src="__APPLICATION__/img/cooperationbanner.png"/>
+	</div>
+	<?php $language =  C('KMC_language')["$lan"];?>
+	<div class="mc-title">
+		<h1>
+			{$h1.type_name}
+		</h1>
+	</div>
+	<div class="mc-content">
+		<p class="mc-p-content">
+				{$res.message_content}
+		</p>
+		<p class="mc-p-tel">
+			<?php echo $language['tel'] ?>：{$tel.tel}
+		</p>
+		<p class="mc-p-tel">
+			<?php echo $language['mail'] ?>：{$tel.mail}
+		</p>
+	</div>
+	<div class="mc-content-img">
+		<img style="width:100%;" class="main-pic-img" src="__APPLICATION__/img/cooperationmap.png"/>
+	</div>
+	
+	
+	
+<include file="Layout:footer" />

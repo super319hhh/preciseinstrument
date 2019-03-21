@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>天津谱祥伟业科技有限公司后台管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="">
+    <meta name="keywords" content="天津谱祥伟业科技有限公司后台管理系统">
+    <meta name="author" content="mirse">
+
+    <link href="__PUBLIC__/administrator/vendor/hadmin/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="__PUBLIC__/administrator/vendor/hadmin/css/animate.css" rel="stylesheet" />
+
+
+    <!-- Extra CSS Libraries Start -->
+    <link href="__PUBLIC__/administrator/css/login.css" rel="stylesheet" type="text/css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        .login-input{
+            position: relative;
+        }
+        p.error{
+            position: absolute;
+            right: 5px;
+            top: 6px;
+            color: #C9302C;
+        }
+    </style>
+</head>
+<body class="fixed-left login-page">
+<!-- Begin page -->
+<div class="container">
+    <div class="full-content-center">
+        <p class="lead" style="color: #FFF;">天津谱祥伟业科技有限公司后台管理系统</p>
+        <div class="login-wrap animated flipInX">
+            <div class="login-block">
+                <!--<img src="__IMG__/default-user.png" class="img-circle not-logged-avatar">-->
+                <form id='loginform'>
+                    <div class="form-group login-input">
+                        <i class="glyphicon glyphicon-user overlay"></i>
+                        <input type="text" name='username' class="form-control text-input" placeholder="用户名" required>
+                    </div>
+                    <div class="form-group login-input">
+                        <i class="glyphicon glyphicon-lock overlay"></i>
+                        <input type="password" name='password' class="form-control text-input" placeholder="密码" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button type="button" id="loginBtn" class="btn btn-success btn-block">登录</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="__PUBLIC__/administrator/vendor/hadmin/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/administrator/vendor/hadmin/js/jquery.validate.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/administrator/vendor/hadmin/js/messages_zh.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        //表单验证控件
+        var validator = $("#loginform").validate({
+            errorElement: "p",
+            errorPlacement: function(error, element) {
+                $( element ).parent().append( error );
+            },
+            //onfocusout: function(element) { $(element).valid(); }, //当丢失焦点时才触发验证请求
+            rules : {
+                username: {
+                    remote:{
+                        url: "__URL__/check_user?"+$('input[name="username"]').val(),
+                        type: "get",
+                        dataType: 'json',
+                    }
+                },
+                password: {
+                    remote:{
+                        url: "__URL__/check_psw?"+$('input[name="password"]').val(),
+                        type: "get",
+                        dataType: 'json',
+                    }
+                },
+            },
+            messages:{
+                username:{
+                    remote: "用户名不存在",
+                    required:"请输入用户名"
+                },
+                password:{
+                    remote: "密码错误",
+                    required:"请输入密码"
+                },
+            }
+        });
+    });
+    // 登录
+    $('#loginBtn').click(function(){
+        $("#loginform").submit();
+    });
+    // 登录键盘事件
+    $(document).keydown(function(e){
+        if (e.keyCode == 13) {
+            e.cancelBubble = true;
+            e.returnValue = false;
+            $("#loginform").submit();
+        }
+    });
+    //表单验证
+    $.validator.setDefaults({
+        submitHandler: function() {
+            var formData = $("#loginform").serialize();
+//          return  console.log(formData);
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: '__URL__/login',
+                data: formData,
+                dataType:"json",
+                async: true,
+                success: function(result) {
+                    if (result.status == 1) {
+                        location.href = "__ROOT__/admin.php/Home";
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

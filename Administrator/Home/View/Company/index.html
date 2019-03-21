@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+	<link rel="stylesheet" href="__ADMIN__/vendor/hadmin/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="__ADMIN__/vendor/hadmin/css/plugins/summernote/summernote.css" />
+	<link rel="stylesheet" href="__ADMIN__/vendor/hadmin/css/font-awesome.css" />
+	<link rel="stylesheet" href="__ADMIN__/vendor/hadmin/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="__ADMIN__/vendor/hadmin/css/style.css" />
+	<link rel="stylesheet" href="__ADMIN__/vendor/hadmin/css/plugins/dataTables/dataTables.bootstrap.css" />
+	<link rel="stylesheet" href="__ADMIN__/vendor/hadmin/css/plugins/sweetalert/sweetalert2.min.css" />
+	<link rel="stylesheet" href="__ADMIN__/vendor/hadmin/css/loaders.css" />
+	<link rel="stylesheet" href="__ADMIN__/vendor/hadmin/FileInput/css/fileinput.min.css" />
+	<link rel="stylesheet" type="text/css" href="__ADMIN__/vendor/hadmin/css/plugins/uploadify/uploadify.css"/>
+	
+	
+	<script type="text/javascript" src="__ADMIN__/vendor/hadmin/js/jquery.min.js" ></script>
+	<script type="text/javascript" src="__ADMIN__/vendor/hadmin/js/bootstrap.min.js" ></script>
+	<script type="text/javascript" src="__ADMIN__/vendor/hadmin/js/plugins/summernote/summernote.min.js" ></script>
+	<script type="text/javascript" src="__ADMIN__/vendor/hadmin/js/plugins/summernote/summernote-zh-CN.js" ></script>
+	<script type="text/javascript" src="__ADMIN__/vendor/hadmin/js/plugins/dataTables/jquery.dataTables.js" ></script>
+	<script type="text/javascript" src="__ADMIN__/vendor/hadmin/js/plugins/dataTables/dataTables.bootstrap.js" ></script>
+	<script type="text/javascript" src="__ADMIN__/vendor/hadmin/js/plugins/sweetalert/sweetalert2.min.js" ></script>
+	<script type="text/javascript" src="__ADMIN__/vendor/hadmin/FileInput/js/fileinput.min.js" ></script>
+	<script src="__ADMIN__/vendor/hadmin/css/plugins/uploadify/jquery.uploadify.js" type="text/javascript" charset="utf-8"></script>
+	
+	
+	<style type="text/css">
+		#editWX{
+			margin-top: 16px;
+		}
+	.mc-table{
+		width: 25%;
+	}
+	.selected{
+		background: #F06E57;
+	}
+	#kInputUploader-button{
+		background: #23ad44;
+		border-radius: 5px;
+		font-size: 14px;
+		font-weight: 400;
+		border: none;
+		margin-left: -24px;
+	}
+	.loaded {transition: opacity .25s linear;opacity: 1; }
+	.loaders {
+		width: 100%;
+		box-sizing: border-box;
+		display: flex;
+		flex: 0 1 auto;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+	.loaders .loader {
+		box-sizing: border-box;
+		display: flex;
+		flex: 0 1 auto;
+		flex-direction: column;
+		flex-grow: 1;
+		flex-shrink: 0;
+		flex-basis: 25%;
+		max-width: 25%;
+		height: 200px;
+		align-items: center;
+		justify-content: center;
+	}	
+	.swal2-modal .btn{
+		margin: 0px 2px;
+	}
+	</style>
+</head>
+<body>
+    <div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">联系管理</h1>
+			</div>
+		</div>
+		<!--公司信息管理中文版-->
+		<div class="row">
+			<div class="col-lg-12">
+				<h2 class="page-header">公司信息管理</h2>
+			</div>
+		</div>
+		<table class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<td>公司名称</td>
+					<td>公司地址</td>
+					<td>版权</td>
+					<td>备案</td>
+					<td>邮编</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{$res.company_name}</td>
+					<td>{$res.company_address}</td>
+					<td>{$res.banquan}</td>
+					<td>{$res.beian}</td>
+					<td>{$res.zip}</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="btnClass">
+			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalSaveInfo">编辑信息</button>
+		</div>
+		<!--公司信息管理英文版-->
+			<div class="row">
+				<div class="col-lg-12">
+					<h2 class="page-header">Company Information</h2>
+				</div>
+			</div>
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<td>CompanyName</td>
+						<td>CompanyAddress</td>
+						<td>CompanyCopyright</td>
+						<td>CompanyICP</td>
+						<td>Zip</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{$resEn.company_name}</td>
+						<td>{$resEn.company_address}</td>
+						<td>{$resEn.banquan}</td>
+						<td>{$resEn.beian}</td>
+						<td>{$resEn.zip}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="btnClass">
+				<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalSaveInfoEn">EditInfo</button>
+			</div>
+		<!--客服管理-->
+		<div class="row">
+			<div class="col-lg-12">
+				<h2 class="page-header">客服管理</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<table class="table table-striped table-bordered table-hover mc-table mc-table-qq col-lg-3">
+					<thead>
+						<td class="textSelected">客服QQ</td>
+					</thead>
+					<tbody>
+						<volist name="showQQ" id="vo">
+							<tr>
+								<td attr-name="qq">{$vo}</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<table class="table table-striped table-bordered table-hover mc-table mc-table-fax col-lg-3">
+					<thead>
+						<td class="textSelected">传真</td>
+					</thead>
+					<tbody>
+						<volist name="showFax" id="vo">
+							<tr>
+								<td attr-name="fax">{$vo}</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<table class="table table-striped table-bordered table-hover mc-table mc-table-tel col-lg-3">
+					<thead>
+						<td class="textSelected">电话</td>
+					</thead>
+					<tbody>
+						<volist name="showTel" id="vo">
+							<tr>
+								<td attr-name="tel">{$vo}</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<table class="table table-striped table-bordered table-hover mc-table mc-table-mail col-lg-3">
+					<thead>
+						<td class="textSelected">邮箱</td>
+					</thead>
+					<tbody>
+						<volist name="showMail" id="vo">
+							<tr>
+								<td attr-name="mail">{$vo}</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<div class="btnClass">
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addQQModal">新增客服</button>
+			<button type="button" class="btn btn-success" id="editKF">编辑客服</button>
+			<button type="button" class="btn btn-danger" id="deleteKF">删除客服</button>
+		</div>
+		<!--微信管理-->
+		<div class="row">
+			<div class="col-lg-12">
+				<h2 class="page-header">微信管理</h2>
+			</div>
+		</div>
+		<form id="mcWxForm">
+			<div class="form-group">
+	            <div class="col-sm-8" id="message">
+	                <div class="col-sm-10">
+	                    <!--展示缩略图-->
+	                    <img src="{$showWX}" alt=""id="kImgShowThumb" height="120px" width="120px" style="margin-left: -24px;">
+	                    <!--封面图字段-->
+	                    <input type="hidden"name="WeChat"id="kInputImagePath">
+	                </div>
+	                <div class="col-sm-7" id="images" style="margin-top: 20px">
+	                    <input type="file" id="kInputUploader">
+	                </div>
+	            </div>
+	        </div>
+		</form>
+		<!--编辑信息modal-->
+		  <div class="modal fade" id="modalSaveInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h3 class="modal-title" id="exampleModalLabel">编辑公司信息</h3>
+			      </div>
+			      <div class="modal-body">
+			        <form id="mc-form">
+			          <div class="form-group">
+			            <label for="company_name" class="control-label">公司名称:</label>
+			            <input type="text" class="form-control" id="company_name" name="company_name" value="{$res.company_name}">
+			          </div>
+			          <div class="form-group">
+			            <label for="company_address" class="control-label">公司地址:</label>
+			            <input type="text" class="form-control" id="company_address" name="company_address" value="{$res.company_address}">
+			          </div>
+			          <div class="form-group">
+			            <label for="banquan" class="control-label">版权:</label>
+			            <input type="text" class="form-control" id="banquan" name="banquan" value="{$res.banquan}">
+			          </div>
+			          <div class="form-group">
+			            <label for="beian" class="control-label">备案:</label>
+			            <input type="text" class="form-control" id="beian" name="beian" value="{$res.beian}">
+			          </div>
+			          <div class="form-group">
+			            <label for="zip" class="control-label">邮编:</label>
+			            <input type="text" class="form-control" id="zip" name="zip" value="{$res.zip}">
+			          </div>
+			        </form>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			        <button type="button" class="btn btn-primary" id="btnSaveInfo" data-dismiss="modal">保存信息</button>
+			      </div>
+			    </div>
+			  </div>
+			</div><!--编辑信息modal结束-->
+			<!--编辑信息modal英文版-->
+		  <div class="modal fade" id="modalSaveInfoEn" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h3 class="modal-title" id="exampleModalLabel">EditCompanyInfo</h3>
+			      </div>
+			      <div class="modal-body">
+			        <form id="mc-formEn">
+			          <div class="form-group">
+			            <label for="company_name" class="control-label">CompanyName:</label>
+			            <input type="text" class="form-control" id="company_name" name="company_name" value="{$resEn.company_name}">
+			          </div>
+			          <div class="form-group">
+			            <label for="company_address" class="control-label">CompanyAddress:</label>
+			            <input type="text" class="form-control" id="company_address" name="company_address" value="{$resEn.company_address}">
+			          </div>
+			          <div class="form-group">
+			            <label for="banquan" class="control-label">CompanyCopyright:</label>
+			            <input type="text" class="form-control" id="banquan" name="banquan" value="{$resEn.banquan}">
+			          </div>
+			          <div class="form-group">
+			            <label for="beian" class="control-label">CompanyICP:</label>
+			            <input type="text" class="form-control" id="beian" name="beian" value="{$resEn.beian}">
+			          </div>
+			          <div class="form-group">
+			            <label for="zip" class="control-label">Zip:</label>
+			            <input type="text" class="form-control" id="zip" name="zip" value="{$resEn.zip}">
+			          </div>
+			        </form>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			        <button type="button" class="btn btn-primary" id="btnSaveInfoEn" data-dismiss="modal">SaveInfo</button>
+			      </div>
+			    </div>
+			  </div>
+			</div><!--编辑信息modal英文版结束-->
+			<!--新增客服modal-->
+			<div class="modal fade" id="addQQModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h3 class="modal-title" id="exampleModalLabel">新增客服</h3>
+			      </div>
+			      <div class="modal-body">
+			        <form id="addQQFrom">
+			          <div class="form-group">
+			            <label for="qq" class="control-label">请输入要增加的QQ号码:</label>
+			            <input type="text" class="form-control" id="qq" name="qq" placeholder="不输入视为不添加">
+			          </div>
+			          <div class="form-group">
+			            <label for="tel" class="control-label">请输入要增加的电话号码:</label>
+			            <input type="text" class="form-control" id="tel" name="tel" placeholder="不输入视为不添加">
+			          </div><div class="form-group">
+			            <label for="fax" class="control-label">请输入要增加的传真号码:</label>
+			            <input type="text" class="form-control" id="fax" name="fax" placeholder="不输入视为不添加">
+			          </div><div class="form-group">
+			            <label for="mail" class="control-label">请输入要增加的邮箱账号:</label>
+			            <input type="text" class="form-control" id="mail" name="mail" placeholder="不输入视为不添加">
+			          </div>
+			        </form>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			        <button type="button" class="btn btn-primary" id="btnAddQQ" data-dismiss="modal">保存</button>
+			      </div>
+			    </div>
+			  </div>
+			</div><!--新增客服modal-->
+			<!--编辑客服modal-->
+    		<div class="modal fade" id="editQQModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h3 class="modal-title" id="exampleModalLabel">编辑客服</h3>
+			      </div>
+			      <div class="modal-body">
+			        <form id="editQQFrom">
+			        </form>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			        <button type="button" class="btn btn-primary" id="btnEditQQ" data-dismiss="modal">保存</button>
+			      </div>
+			    </div>
+			  </div>
+			</div><!--编辑QQmodal结束-->
+    </div>
+    
+    <script type="text/javascript">
+	/*写的不完善啊，要是有童鞋看到用了一定要慎重*/
+		function KMCL(){
+			this.loadSquare = '<style type="text/css">'+
+										'.loader{position:absolute;top:50%;left:50%;margin-top:-100px;z-index:2001}'+
+										'.loader .square-spin >div{'+
+											'border: 5px solid #007cff;'+
+										'}'+
+							'</style>'+
+							'<div id="KMC_MODEL_LOADING">'+
+								'<div class="loader" >'+
+									' <div class="loader-inner square-spin">'+
+										
+										'<div></div>'+
+									'</div>'+
+									'<p style="font-size: x-large;margin-left: -10px;margin-top: 5px;color:#ffffff;cursor:default">加载中...</p>'+
+								'</div>'+
+								'<div style="position: absolute;top: 0;left: 0; width: 100%;height: 200%;background: rgba(0,0,0,0.7); z-index:2000;"></div>'+
+							'</div>';
+			this.add = function(){
+				if ( $('#KMC_MODEL_LOADING').length > 0 ) {
+					//防止重复
+				} else {
+					$(document.body).append(this.loadSquare);
+				}
+			}
+			this.remove = function(){
+				if ( $('#KMC_MODEL_LOADING').length > 0 ) {
+					$('#KMC_MODEL_LOADING').remove();
+				} else {
+					
+				}
+			}
+		}
+		var loading = new KMCL();
+	</script>
+    <script type="text/javascript">
+    	$(document).ready(function(){
+    		//编辑公司信息中文版模态框确认按钮
+    		$("#btnSaveInfo").bind('click',function(event){
+    			loading.add()
+    			var fromData = $("#mc-form").serializeArray();
+    			var postData = {};
+    			$(fromData).each(function(){
+    				postData[this.name]=this.value; 
+    			})
+					$.ajax({
+    				type:"post",
+    				url:"__MODULE__/Company/saveInfo",
+    				async:true,
+    				data:postData,
+    				dataType:'json',
+    				success:function(data){
+    					loading.remove()
+    					location.href = "__ACTION__"
+	    			},
+	    			error:function(data){
+	    				loading.remove()
+    					location.href = "__ACTION__"
+	    			}
+	    			});
+    			})
+    		//编辑公司信息英文版模态框确认按钮
+    		$("#btnSaveInfoEn").bind('click',function(event){
+    			loading.add()
+    			var fromData = $("#mc-formEn").serializeArray();
+    			var postData = {};
+    			$(fromData).each(function(){
+    				postData[this.name]=this.value; 
+    			})
+					$.ajax({
+    				type:"post",
+    				url:"__MODULE__/Company/saveInfoEn",
+    				async:true,
+    				data:postData,
+    				dataType:'json',
+    				success:function(data){
+    					loading.remove()
+    					location.href = "__ACTION__"
+	    			},
+	    			error:function(data){
+	    				loading.remove()
+    					location.href = "__ACTION__"
+	    			}
+	    			});
+    			})
+    		//新增客服模态框确认按钮
+    		$("#btnAddQQ").bind("click",function(){
+    			loading.add()
+				var addQQFromData =	$("#addQQFrom").serializeArray();
+				var postData  = {};
+				$(addQQFromData).each(function(){
+					postData[this.name] = this.value;
+				})
+				$.ajax({
+					type:"post",
+					url:"__MODULE__/Company/addQQData",
+					async:true,
+					data:postData,
+					dataType:'json',
+					success:function(data){
+	    				loading.remove()
+    					location.href = "__ACTION__"
+	    			},
+	    			error:function(data){
+	    				loading.remove()
+    					location.href = "__ACTION__"
+	    			}
+				});
+    		})
+    		//编辑客服事件
+    			//选中表格
+    		$(".mc-table tbody tr td").bind('click',function(){
+    			$(this).hasClass('selected') || $('.selected').length && $('.selected').removeClass();
+    			$(this).toggleClass('selected')
+    		})
+    			//点击编辑按钮
+    		$("#editKF").bind('click',function(){
+    			loading.add()
+    			var postName = $(".mc-table .selected").attr("attr-name")
+    			var textBData = $(".mc-table .selected").text();
+    			var textHData = $(".mc-table .selected").parent().parent().parent().find('.textSelected').text();
+    				for(var i=0;i<$(".mc-table .selected").length;i++){
+    				$("#editQQModal #editQQFrom").append(
+	    				'<div class="form-group">'+
+				            '<label for="qq" class="control-label">'+textHData+''+":"+'</label>'+
+				            '<input type="text" class="form-control" id="qq" name="'+postName+'" value="'+textBData+'">'+
+				        '</div>'
+			          )
+    				}
+    			loading.remove();
+    			$("#editQQModal").modal();
+    		})
+    		//点击编辑客服模态框按钮
+    		$("#btnEditQQ").bind('click',function(){
+    			loading.add();
+    			var fromData = $("#editQQFrom").serializeArray();
+    			var postData = {};
+    			$(fromData).each(function(){
+    				postData[this.name]=this.value; 
+    			})
+    			var rowNum = $(".mc-table .selected").parent().index();	
+    			postData['num']=rowNum;
+    			var rowType = $(".mc-table .selected").attr("attr-name");
+    			postData['type'] = rowType;
+				$.ajax({
+				type:"post",
+				url:"__MODULE__/Company/editQQData",
+				async:true,
+				data:postData,
+				dataType:'json',
+				success:function(data){
+					loading.remove();
+					location.href = "__ACTION__"
+    				},
+    			error:function(data){
+					loading.remove();
+					location.href = "__ACTION__"
+    				}
+    			});
+    		})
+    		//删除客服事件
+    		$("#deleteKF").bind('click',function(){
+    			var postData = {};
+    			var rowType = $(".mc-table .selected").attr("attr-name");
+    			postData['type'] = rowType;
+    			var tableData = "";
+    			for(var i=0;i<$(".mc-table .selected").parent().parent().children().length;i++){
+    				if($(".mc-table .selected").parent().parent().children().eq(i).children().attr("class")!=='selected'){
+    					var tableData = tableData + $(".mc-table .selected").parent().parent().children().eq(i).children().text() + "/" 
+    				}
+    			}
+    			postData['data'] = tableData;
+    			swal({
+				title: '删除选中联系方式？',
+				text: "操作后数据无法恢复",
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: '确认删除',
+				cancelButtonText: '取消操作',
+				confirmButtonClass: 'btn btn-success dismissed-btn',
+				cancelButtonClass: 'btn btn-danger dismissed-btn',
+				buttonsStyling: false
+				}).then(function(isConfirm){
+    				loading.add()
+					if(isConfirm === true) {
+						loading.add();
+						$.ajax({
+						type:"post",
+						url:"__MODULE__/Company/deleteQQData",
+						async:true,
+						data:postData,
+						dataType:'json',
+						success:function(data){
+							loading.remove();
+							location.href = "__ACTION__"
+    						},
+    					error:function(data){
+							loading.remove();
+							location.href = "__ACTION__"
+    						},
+    					});
+					}
+				})
+    		})
+    		//模态框关闭后数据清空
+	    		$('#editQQModal').on('hidden.bs.modal',function(e){
+			  	$(".modal-body #editQQFrom").html('');
+			})
+    		 //图片上传插件
+		    $('#kInputUploader').uploadify({
+		        'swf':'__HADMIN__/css/plugins/uploadify/uploadify.swf',
+		        'uploader':'__URL__/ajaxUploadImage',
+		        'buttonText':'编辑二维码图片',
+		        'fileTypeExts':'*.gif;*.png;*.jpg',
+		        'fileTypeDecs':'Image File',
+		        'fileObjName':'file',
+		        'onUploadSuccess':function (file,data,response) {
+		            if(response){
+		                var res = JSON.parse(data);
+		            	console.log(res)
+		                $('#kImgShowThumb').attr('src',res.image_path).show();
+		                $('#kInputImagePath').attr('value',res.image_path);
+		                var formData = $("#mcWxForm").serializeArray();
+		                var postData = {};
+		                postData['WeChat'] = formData[0]['value'];
+		                $.ajax({
+		                	type:"post",
+		                	url:"__MODULE__/Company/saveWx",
+		                	async:true,
+		                	data:postData,
+		                	dataType:'json',
+		                	success:function(data){
+		                		
+		                	}
+		                });
+		            }
+		        },
+		    });
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+   
+    	
+    	
+    	
+    	})
+    	
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+.messages{
+	text-align: center;
+}
+.title-bk{margin-top: 4em;}
+.messages form{
+	/*margin-top: 4em;*/
+}
+.messages input,textarea{
+	width: 65%;
+	margin-top:1em ;
+	padding-left: 0.75em;
+	outline: none;
+}
+.messages .label{
+	position: absolute !important;
+	color: #B3B3B3;
+	background: #FFF;
+	top: -20px;
+	left: 5px;
+}
+.messages .text-label{
+	top: -350px !important;
+}
+textarea:focus{
+	outline: none;
+}
+.messages input{
+	color: #333;
+	height: 3em;
+	background: none;
+	border: 1px solid #A9A9A9;
+}
+.messages textarea{
+	padding: 0.75em;
+	height: 25.5em;
+}
+.messages button{
+	margin: 5.5em 0;
+	width: 9.5em;
+	height: 4em;
+}
+
+
+@media (max-width: 1030px) {
+		.messages input,textarea{
+			width: 90%;
+			margin-top:0.75em ;
+			padding-left: 0.75em;
+		}
+}
+@media(max-width:700px) {
+	.messages input,textarea{
+		width: 90%;
+		margin-top:0.5em;
+		margin-bottom: 0.25em;
+		padding-left: 0.75em;
+	}
+	.messages textarea{
+		height: 7em;
+	}
+	.messages .text-label{
+		top: -8em !important;
+	}
+	#f-content-error{
+		top: -5em !important;
+	}
+	.messages button{
+		margin-top: 3em;
+		width: 4.5em;
+		height: 2.5em;
+	}
+	.messages{
+		/*height: 60em;*/
+		text-align: center;
+	}
+	.messages form{
+		margin-top: 1em;
+	}
+}
+
+#form-add span{
+	position: relative;
+}
+label.error{
+	color:red;
+	position: absolute;
+	right: 10px;
+	top: 15%;
+}
+#f-content-error{
+	top: -325px;
+}
+

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>招聘管理</title>
+	<link href="__HADMIN__/css/bootstrap.min.css" rel="stylesheet">
+	<link href="__HADMIN__/css/font-awesome.min.css" rel="stylesheet">
+	<link href="__HADMIN__/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+	<link href="__VENDOR__/layui/css/layui.css" rel="stylesheet">
+	<link href="__HADMIN__/css/plugins/summernote/summernote.css" rel="stylesheet">
+    <link href="__HADMIN__/css/plugins/summernote/summernote-bs3.css" rel="stylesheet">
+    <link href="__HADMIN__/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+	<!-- <link href="__VENDOR__/fileinput/css/fileinput.min.css" rel="stylesheet"> -->
+	<link href="__HADMIN__/css/style.css" rel="stylesheet">
+	<link href="__ADMIN__/css/post_m.css" rel="stylesheet">
+	<link href="__ADMIN__/css/common.css" rel="stylesheet">
+	<style type="text/css">
+		/*sweetalert错误提示样式*/
+		.sweet-alert .sa-input-error{
+			top: 22px;
+		}
+		label.error{
+			right: -90px;
+		}
+		.ml{
+			margin-left: 50px;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper wrapper-content">
+  		<h1 class="page-header">职位管理</h1>
+  		<!-- panel -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="clearfix">
+				<a class="btn btn-primary pull-right" data-toggle="modal" href='#newPosition'>添加</a>
+				</div>
+			</div>
+			<div class="panel-body">
+				<table width="100%" id="positionTb" class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>职位名称</th>
+							<th>语言</th>
+							<th width="15%">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div><!-- panel end -->
+	</div>
+	<!-- newPosition modal -->
+	<div class="modal fade" id="newPosition">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">添加职位</h4>
+				</div>
+				<div class="modal-body">
+					<form id="newPositionForm" class="layui-form">
+						<div class="row ml">
+							<!-- 语言 -->
+							<div class="col-md-8">
+								<label class="layui-form-label">
+									<span>语</span><span>言 :</span>
+								</label>
+								<div class="layui-input-block">
+									<input type="radio" name="language" value="ZH" title="中文" checked>
+									<input type="radio" name="language" value="EN" title="英文">
+								</div>
+							</div>
+							<!-- 职位名称 -->
+							<div class="col-md-8">
+								<label class="layui-form-label">
+									<span>职</span><span>位</span><span>名</span><span>称:</span>
+								</label>
+								<div class="layui-input-block">
+									<input type="text" name="position_name" required placeholder="请输入职位名称" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group" role="group">
+							<button type="button" id="newPostSubmit" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></button>
+						</div>
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- newPosition modal end -->
+	<script src="__HADMIN__/js/jquery.min.js"></script>
+	<script src="__HADMIN__/js/bootstrap_m.min.js"></script>
+
+	<!-- validate -->
+	<script src="__VENDOR__/jqueryValidate/jquery.validate.min.js"></script>
+	<script src="__VENDOR__/jqueryValidate/messages_zh.min.js"></script>
+
+	<!-- datatables -->
+	<script src="__HADMIN__/js/plugins/dataTables/jquery.dataTables.js"></script>
+	<script src="__HADMIN__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+	<!-- layer -->
+	<script src="__HADMIN__/js/plugins/layer/layer.min.js"></script>
+	<script src="__VENDOR__/layui/layui.js"></script>
+
+
+	<!-- sweetalert -->
+	<script src="__HADMIN__/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+	<include file="Home@Layout/preFunction" />
+	<script type="text/javascript">
+		$(document).ready(function() {
+			oTable = $('#positionTb').DataTable({
+				"bProcessing": true,
+				"sPaginationType": "full_numbers",
+				// "scrollY": tableHeight,
+				// "scrollCollapse": "true",
+				/*自定义语言*/
+				"oLanguage": {
+					"sProcessing": "正在加载数据...",
+					"sLengthMenu": "每页显示 _MENU_ 条记录",
+					"sZeroRecords": "抱歉， 没有找到",
+					"sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+					"sInfoEmpty": "没有数据",
+					"sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+					"oPaginate": {
+						"sFirst": "首页",
+						"sPrevious": "前一页",
+						"sNext": "后一页",
+						"sLast": "尾页"
+					},
+					"sZeroRecords": "没有职位信息",
+					"sSearch": "搜索",
+				},
+				/*请求方法*/
+				"ajax":{
+					"url":"__URL__/getPositionInfo",
+					"data":function(d){
+
+					}
+				},
+				/*向后台传参*/
+				"fnServerParams": function(aoData) {
+					aoData.push({
+						"name": "name",
+						"value": "value"
+					});
+				},
+				/*列，mData的个数要与html中的td一致*/
+				"aoColumns": [
+					{
+						"data":"position_name",
+						"class":"text-left"
+					},
+					{"mData":"language"},
+					{
+						"data":"is_show",
+						"render":function(data,type,full,meta){
+							var state = '',
+								sOut = '<div class="btn-group"><button type="button" id="edit" class="btn btn-success">编辑</button>';
+								sOut += '<button type="button" id="delete" class="btn btn-danger">删除</button></div>';
+							return sOut;
+						}
+					},
+				],
+				"drawCallback": function( settings ) {
+		            // 渲染完毕后的回调
+	        	}
+			});
+			// 表单验证初始化
+			$("#newPositionForm").validate({
+			 	messages:{
+		            position_name:{
+		                required:"职位名称必填"
+		            },
+			    }
+			});
+		});
+		// 销毁模态框
+		$('#newPosition').on("hidden.bs.modal", function(){
+			$("#newPositionForm").data('validator').resetForm();
+			$('input[name="position_name"]').val(null);
+			$('.ml').load(location.href+" .ml");
+		});
+		// 显示模态框
+		$('#newPosition').on("show.bs.modal", function(){
+			form.render();
+		});
+		//获取表格中选中的值
+		function getDataTablesByClass(element,clsName){
+			var res;
+			for(var i=0 ;i< $('#'+element).DataTable().rows('.'+clsName).data().length;i++){
+	   			res = $('#'+element).DataTable().rows('.'+clsName).data()[i];
+			}
+			return res;
+		}
+		// layui.form 初始化
+		layui.use('form', function(){
+		  	form = layui.form();
+		});
+
+		$('.table').on('click','tbody td button',function(event){
+			oTable.$('tr.selected').removeClass('selected');
+           	$(this).parents('tr').addClass("selected");
+		});
+		// 添加职位
+		$('#newPostSubmit').click(function(){
+			$("#newPositionForm").submit();
+		});
+	    $.validator.setDefaults({
+			submitHandler: function() {
+				$('#newPosition').modal('hide');
+				var formData = $("#newPositionForm").serialize();
+				$.ajax({
+					cache: true,
+					type: "POST",
+					url: '__URL__/newPosition',
+					data: formData,
+					dataType:"json",
+					async: true,
+					beforeSend:function(xhr){
+						loading.add();
+					},
+					success: function(result) {
+						loading.remove();
+						if (result.status == 1) {
+							oTable.ajax.reload();
+						}
+					}
+				});
+			}
+		});
+		// 编辑
+		$('.table').on('click','#edit',function(){
+			var data = getDataTablesByClass('positionTb','selected');
+			swal({
+				title: "修改职位名称 [ "+data.position_name+" ]",
+				type: "input",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				showLoaderOnConfirm: true,
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				inputPlaceholder: "请输入职位名称",
+				inputValue: data.position_name,
+			},function(inputValue){
+				if (inputValue === false)
+					return false;
+				if (inputValue === "") {
+				    swal.showInputError("请输入需要修改的职位名称!");
+				    return false
+				}
+				$.ajax({
+					cache: true,
+					type: "POST",
+					url: '__URL__/editPosition',
+					data: {
+						'position_id': data.position_id,
+						'position_name': inputValue,
+					},
+					dataType:"json",
+					async: true,
+					success: function(result) {
+						if (result.status == 1) {
+							swal.close();
+							oTable.ajax.reload();
+						}
+					}
+				});
+			});
+		});
+		// 删除
+		$('.table').on('click','#delete',function(){
+			var data = getDataTablesByClass('positionTb','selected');
+			swal({
+				title: "确认删除职位名称 ["+data.position_name+"]",
+				text: "删除后无法恢复",
+				type: "warning",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				showLoaderOnConfirm: true,
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+			},function(){
+				$.ajax({
+					cache: true,
+					type: "POST",
+					url: '__URL__/deletePosition',
+					data: {
+						'position_id': data.position_id
+					},
+					dataType:"json",
+					async: true,
+					success: function(result) {
+						if (result.status == 1) {
+							swal.close();
+							oTable.ajax.reload();
+						}
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/PrecisionInstrumentProject/!svn/ver/74/PrecisionInstrument/Public/administrator/vendor/hadmin/FileInput/nuget
+END
+build.bat
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/PrecisionInstrumentProject/!svn/ver/74/PrecisionInstrument/Public/administrator/vendor/hadmin/FileInput/nuget/build.bat
+END
+Package.nuspec
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/PrecisionInstrumentProject/!svn/ver/74/PrecisionInstrument/Public/administrator/vendor/hadmin/FileInput/nuget/Package.nuspec
+END

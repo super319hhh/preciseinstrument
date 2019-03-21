@@ -1,0 +1,101 @@
+<include file="Layout:header" />
+<link href="__APPLICATION__/css/career.css" rel="stylesheet" type="text/css"/>
+<block name="cotent">
+    <div style="margin-bottom: 88px" id="imagemargin">
+        <img src="__APPLICATION__/img/4.png" width="100%"/>
+    </div>
+    <div class="container" style="position: relative;">
+        <div class="search">
+            <input type="text" name="search" placeholder="<?php if(cookie('lan') == 'EN') echo 'Please enter keywords here'; else echo '请在此输入关键字'; ?>" class="search-input">
+            <a href="javascript:;" search-type="pro" class="search-pro search-submit"><?php if(cookie('lan') == 'EN') echo "pros"; else echo "搜产品"; ?></a>
+            <a href="javascript:;" search-type="all" class="search-all search-submit"><?php if(cookie('lan') == 'EN') echo "others"; else echo "搜综合"; ?></a>
+        </div>
+    </div>
+    <link href="__APPLICATION__/css/product.css" rel="stylesheet" type="text/css"/>
+    <div id="contents" class="res" style=" margin-top: -88px;">
+        <ol class="breadcrumb">
+            <li><a href="__URL__/index_0">{$product}</a></li>
+            <li><a href="__URL__/{$pages}">{$productMessage.type_name}</a></li>
+            <li>{$productMessage.product_name}</li>
+        </ol>
+        <!--<div  id="product">-->
+            <!--<span style="margin-left: 1%"><a href="__URL__/index_0">{$product}</a></span>-->
+            <!--<span>/</span>-->
+            <!--<span><a href="__URL__/{$pages}">{$productMessage.type_name}</a></span>-->
+            <!--<span>/</span>-->
+            <!--<span>{$productMessage.product_name}</span>-->
+        <!--</div>-->
+        <div id="manage" class="clearfix">
+            <div id="image">
+                <img src="{$productMessage.main_pic}" width="100%"/>
+            </div>
+            {$productMessage.product_detail}
+        </div>
+    </div>
+</block>
+<script>
+
+    function getCookie(name){
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+    if (getCookie('lan') == 'EN') {
+        notice_1 = 'Search',
+                notice_2 = 'a total of',
+                notice_3 = 'results',
+                errorRes = 'no results';
+        career = 'careers';
+        news = 'news';
+    } else {
+        notice_1 = '搜索',
+                notice_2 = '共有',
+                notice_3 = '条结果',
+                errorRes = '没有结果';
+        career = '招聘信息';
+        news = '新闻动态';
+    }
+    $('.search-submit').click(function(){
+        var searchC = $('.search-input').val(),
+                searchType = $(this).attr('search-type');
+//        alert('asdasd')
+        $.ajax({
+            type: 'post',
+            url: '__MODULE__/Home/search',
+            data:{
+                'search_type': searchType,
+                'search_content': searchC
+            },
+            dataType: 'json',
+            success: function(result){
+                if (result.status == 1) {
+                    $('.res').empty();
+                    var sOut = '<div class="container search-res"><ul><li><span>'+notice_1+'“'+searchC+'”'+notice_2+result.data.length+notice_3+'</span></li>';
+                    for (var i = 0; i < result.data.length; i++) {
+                        sOut += '<li><a href="__MODULE__/ProductManage/product_manage?product_id='+result.data[i].product_id+'">'+result.data[i].product_name+'</a></li>';
+                    }
+                    sOut += '</ul></div>';
+                    $('.res').html(sOut);
+                }else if (result.status == 2) {
+                    $('.res').empty();
+                    var sOut = '<div class="container search-res"><ul><li><span>'+notice_1+'“'+searchC+'”'+notice_2+result.data['total']+notice_3+'</span></li>';
+                    for (var i = 0; i < result.data['career'].length; i++) { // 招聘
+                        sOut += '<li><a href="__MODULE__/Home/career_detail?r='+result.data['career'][i].position_id+'">'+result.data['career'][i].position_name+' -- '+career+'</a></li>';
+                    }
+                    for (var i = 0; i < result.data['new'].length; i++) { // 新闻
+                        sOut += '<li><a href="__MODULE__/Home/new_detail?r='+result.data['new'][i].message_id+'">'+result.data['new'][i].message_title+' -- '+news+'</a></li>';
+                    }
+                    sOut += '</ul></div>';
+                    $('.res').html(sOut);
+                }else{
+                    $('.res').empty();
+                    $('.res').html('<div class="container">'+errorRes+'</div>');
+                }
+            }
+        });
+    });
+
+</script>
+<include file="Layout:footer" />

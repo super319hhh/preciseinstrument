@@ -1,0 +1,10 @@
+.table th,
+.table td{
+	text-align: center;
+}
+.table td.text-left{
+	text-align: left !important;
+}
+.table td.text-right{
+	text-align: right !important;
+}

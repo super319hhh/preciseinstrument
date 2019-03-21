@@ -1,0 +1,45 @@
+.apply-content--table{
+	text-align: center;
+	border-color: #CCC;
+}
+.apply-content--table tr{
+	height: 40px;
+}
+.apply-content--table input,
+.apply-content--table textarea{
+	border: none;
+	width: 100%;
+}
+.apply-content--table input{
+	height: 40px;
+	text-align: center;
+}
+.apply-content--table textarea{
+	resize: none;
+	padding: 10px 20px;
+}
+.apply-content--table .experience,
+.apply-content--table .experience p,
+.apply-content--table .prize,
+.apply-content--table .prize p{
+	padding-top: 5px;
+	height: 100px;
+	vertical-align: middle;
+}
+.apply-content--table .fun,
+.apply-content--table .fun p{
+	padding-top: 5px;
+	height: 92px;
+	vertical-align: middle;
+}
+.apply-content--table .fun label{
+	position: absolute;
+	top: 5px;
+	left: 5px;
+}
+.apply-content--table .fun p{
+	text-indent: 145px;
+}
+.text-left{
+	padding-left: 10px;
+}

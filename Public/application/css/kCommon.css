@@ -1,0 +1,28 @@
+.common-title,.common-title *{
+	/*color: brown !important;*/
+	font-size: 2.5rem !important;
+	font-weight: normal !important;
+	background: #F5F5F5;
+	height: 3.2em;
+}
+.common-title li{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.common-title li a{
+	height: auto;
+}
+.career-nav{
+	margin-bottom: 3em !important;
+}
+@media(max-width:860px) {
+	.common-title,.common-title  *{
+		font-size: 2rem !important;
+	}
+}
+@media(max-width:480px) {
+	.common-title,.common-title  *{
+		font-size: 1.8rem !important;
+	}
+}

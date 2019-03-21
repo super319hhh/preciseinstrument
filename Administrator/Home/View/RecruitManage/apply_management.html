@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>招聘管理</title>
+	<link href="__HADMIN__/css/bootstrap.min.css" rel="stylesheet">
+	<link href="__HADMIN__/css/font-awesome.min.css" rel="stylesheet">
+	<link href="__HADMIN__/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+	<link href="__VENDOR__/layui/css/layui.css" rel="stylesheet">
+	<link href="__HADMIN__/css/plugins/summernote/summernote.css" rel="stylesheet">
+    <link href="__HADMIN__/css/plugins/summernote/summernote-bs3.css" rel="stylesheet">
+    <link href="__HADMIN__/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+	<link href="__HADMIN__/css/style.css" rel="stylesheet">
+	<link href="__ADMIN__/css/post_m.css" rel="stylesheet">
+	<link href="__ADMIN__/css/apply_m.css" rel="stylesheet">
+	<link href="__ADMIN__/css/common.css" rel="stylesheet">
+</head>
+<body>
+	<div class="wrapper wrapper-content">
+  		<h1 class="page-header">职位申请</h1>
+  		<!-- panel -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="clearfix">
+					<form action="" class="form-inline">
+						<div class="form-group">
+							<span class="control-label">筛选状态：</span>
+					     	<select id="dateSearch" class="form-control" style="padding: 0 12px;">
+					         	<option value="">全部</option>
+					         	<option value="未查看">未查看</option>
+					         	<option value="已查看">已查看</option>
+					     	</select>
+						</div>
+					</form>
+                 </div>
+			</div><!-- /.panel-heading -->
+			<div class="panel-body">
+				<table width="100%" id="applyTb" class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>职位</th>
+							<th>类型</th>
+							<th>姓名</th>
+							<th>申请时间</th>
+							<th>详情</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div><!-- panel end -->
+	</div>
+	<!-- applyDetail modal -->
+	<div class="modal fade" id="applyDetail">
+		<div class="modal-dialog" style="width: 80%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">申请详情</h4>
+				</div>
+				<div class="modal-body">
+					<table class="apply-content--table" width="100%" border="1" frame="box">
+						<tbody>
+							<tr>
+								<td>姓名</td>
+								<td><p attr-name="name"></p></td>
+								<td>性别</td>
+								<td><p attr-name="sex"></p></td>
+								<td>年龄</td>
+								<td><p attr-name="origin"></p></td>
+							</tr>
+							<tr>
+								<td>籍贯</td>
+								<td><p attr-name="native_place"></p></td>
+								<td>民族</td>
+								<td><p attr-name="nation"></p></td>
+								<td>学历</td>
+								<td><p attr-name="education_level"></p></td>
+							</tr>
+							<tr>
+								<td>政治面貌</td>
+								<td><p attr-name="political"></p></td>
+								<td>毕业日期</td>
+								<td><p attr-name="graduation_date"></p></td>
+								<td>婚姻状况</td>
+								<td><p attr-name="marital_status"></p></td>
+							</tr>
+							<tr>
+								<td>毕业院校</td>
+								<td><p attr-name="graduate_institutions_professional"></p></td>
+								<td>所学专业</td>
+								<td><p attr-name="major"></p></td>
+								<td>英语水平</td>
+								<td><p attr-name="language_proficiency"></p></td>
+							</tr>
+							<tr>
+								<td>联系电话</td>
+								<td><input type="text" name="contact_number"></td>
+								<td>户口所在地</td>
+								<td><input type="text" name="registered_permanent_residence"></td>
+								<td>应聘职位</td>
+								<td><input type="text" name="position_name"></td>
+							</tr>
+							<tr>
+								<td>其他技能</td>
+								<td colspan="5"><p class="text-left" attr-name="skills"></p></td>
+							</tr>
+							<tr>
+								<td>家庭住址</td>
+								<td colspan="5"><p class="text-left" attr-name="home"></p></td>
+							</tr>
+							<tr>
+								<td colspan="6">实习/实践经历</td>
+							</tr>
+							<tr class="experience">
+								<td colspan="6"><p class="text-left" attr-name="exp"></p></td>
+							</tr>
+							<tr>
+								<td colspan="6">在校期间参加活动、培训和获得奖励及证书情况</td>
+							</tr>
+							<tr class="prize">
+								<td colspan="6"><p class="text-left" attr-name="award"></p></td>
+							</tr>
+							<tr class="fun">
+								<td colspan="6" style="position: relative;">
+									<label>个人特长、兴趣爱好：</label>
+									<p class="text-left" attr-name="special_hobby"></p>
+								</td>
+							</tr>
+							<p attr-name="jobapp_id" style="display: none;"></p>
+							<p attr-name="is_read" style="display: none;"></p>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- applyDetail modal end -->
+	<script src="__HADMIN__/js/jquery.min.js"></script>
+	<script src="__HADMIN__/js/bootstrap.min.js"></script>
+
+	<!-- datatables -->
+	<script src="__HADMIN__/js/plugins/dataTables/jquery.dataTables.js"></script>
+	<script src="__HADMIN__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+	<!-- layer -->
+	<script src="__HADMIN__/js/plugins/layer/layer.min.js"></script>
+	<script src="__VENDOR__/layui/layui.js"></script>
+	<!-- validate -->
+	<script src="__VENDOR__/jqueryValidate/jquery.validate.min.js"></script>
+	<script src="__VENDOR__/jqueryValidate/messages_zh.min.js"></script>
+
+
+	<!-- sweetalert -->
+	<script src="__HADMIN__/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+	<script src="__ADMIN__/js/m.js"></script>
+	<include file="Home@Layout/preFunction" />
+	<script type="text/javascript">
+		$(document).ready(function() {
+			oTable = $('#applyTb').DataTable({
+				"bProcessing": true,
+				"sPaginationType": "full_numbers",
+				"order": [[ 5, "desc" ]],
+				// "scrollY": tableHeight,
+				// "scrollCollapse": "true",
+				/*自定义语言*/
+				"oLanguage": {
+					"sProcessing": "正在加载数据...",
+					"sLengthMenu": "每页显示 _MENU_ 条记录",
+					"sZeroRecords": "抱歉， 没有找到",
+					"sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+					"sInfoEmpty": "没有数据",
+					"sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+					"oPaginate": {
+						"sFirst": "首页",
+						"sPrevious": "前一页",
+						"sNext": "后一页",
+						"sLast": "尾页"
+					},
+					"sZeroRecords": "没有符合条件的职位申请信息",
+					"sSearch": "搜索",
+				},
+				/*请求方法*/
+				"ajax":{
+					"url":"__URL__/getApplyInfo",
+					"data":function(d){
+
+					}
+				},
+				/*向后台传参*/
+				"fnServerParams": function(aoData) {
+					aoData.push({
+						"name": "name",
+						"value": "value"
+					});
+				},
+				/*列，mData的个数要与html中的td一致*/
+				"aoColumns": [
+					{
+						"data":"position_name",
+						"class":"text-left"
+					},
+					{
+						"data":"type_name",
+						"class":"text-left"
+					},
+					{
+						"data":"name",
+						"class":"text-left"
+					},
+					{
+						"data":"jobapp_date",
+						orderData: [ 3, 5 ],
+						"render":function(data,type,full,meta){
+							return data = data.substring(0,10);
+						}
+					},
+					{
+						"data":"name",
+						"render":function(data,type,full,meta){
+							return '<button type="button" id="showDetail" class="btn btn-info btn-outline">查看详情</button>';
+						}
+					},
+					{
+						"data":"is_read",
+						"render":function(data,type,full,meta){
+							return data == 'N' ? '<span class="text-danger">未查看</span>' : '<span class="text-success">已查看</span>';
+						}
+					},
+
+				],
+				"drawCallback": function( settings ) {
+		            // 渲染完毕后的回调
+
+	        	}
+			});
+		});
+		// 销毁模态框
+		$('#applyDetail').on("hidden.bs.modal", function(){
+			if ($('p[attr-name="is_read"]').text() == 'N') {
+				$.ajax({
+					cache: true,
+					type: "POST",
+					url: '__URL__/readApplyInfo',
+					data: {
+						'jobapp_id': $('p[attr-name="jobapp_id"]').text()
+					},
+					dataType:"json",
+					async: true,
+					success: function(result) {
+						if (result.status == 1) {
+							oTable.ajax.reload();
+							var oHtml = $('#apply-count', parent.document).html();
+							if (oHtml == 1) {
+								$('#apply-count', parent.document).html('');
+							}else{
+								$('#apply-count', parent.document).html(oHtml-1);
+							}
+							// parent.location.reload();
+						}
+					}
+				});
+			}
+			$('#applyDetail p').text('');
+		});
+		// 显示模态框
+		$('#newPost').on("show.bs.modal", function(){
+
+		});
+		$('#dateSearch').on('change',function(){
+			var oSettings = "",
+				filedValue = $(this).val();
+			oSettings = oTable.column(5).search(filedValue);
+			oTable.draw(oSettings);
+		});
+		//获取表格中选中的值
+		function getDataTablesByClass(element,clsName){
+			var res;
+			for(var i=0 ;i< $('#'+element).DataTable().rows('.'+clsName).data().length;i++){
+	   			res = $('#'+element).DataTable().rows('.'+clsName).data()[i];
+			}
+			return res;
+		}
+		$('.table').on('click','tbody td button',function(event){
+			oTable.$('tr.selected').removeClass('selected');
+           	$(this).parents('tr').addClass("selected");
+		});
+		// 查看职位详情
+		$('.table').on('click','#showDetail',function() {
+			var data = getDataTablesByClass('applyTb','selected');
+			for (k in data) {
+	        	// 显示详情
+	        	$('#applyDetail p[attr-name="'+k+'"]').text(data[k]);
+	        	$('#applyDetail input[name="'+k+'"]').val(data[k]);
+	        }
+			$('#applyDetail').modal('show');
+		});
+	</script>
+</body>
+</html>

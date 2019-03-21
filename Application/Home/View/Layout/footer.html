@@ -1,0 +1,78 @@
+<!--footer-->
+		<footer>
+			<div class="container">
+				<div class="footer-a">
+					<div class="col-sm-3 col-xs-6">
+						<a href="http://www.baidu.com"><?php echo $language['ft_link'] ?></a>
+					</div>
+					<div class="col-sm-3 col-xs-6">
+						<a href="{:U('ProductManage/index_0')}"><?php echo $language['ft_msg'] ?></a>
+					</div>
+					<div class="col-sm-3 col-xs-6">
+						<a href="{:U('News/index')}"><?php echo $language['ft_partner'] ?></a>
+					</div>
+					<div class="col-sm-3 col-xs-6">
+						<a href="{:U('Company/index')}"><?php echo $language['ft_join'] ?></a>
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+				<div class="copy_right">
+					<p>CopyRight {$company['banquan']} all rights reserved</p>
+					<p ><?php echo $language['ft_icp'] ?>：{$company['beian']}</p>
+				</div>
+			</div>
+		</footer>
+		<!--/footer-->
+		<a href="#to-top" id="toTop" style="display: block;z-index: 999;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+		<!---->
+		</div>
+		<!--footer-starts-->
+
+		<script type="text/javascript" src="__TEMPLATE__/js/move-top.js"></script>
+		<script type="text/javascript" src="__TEMPLATE__/js/easing.js"></script>
+		<script src="__APPLICATION__/vendor/jquery-kf-150204222430/js/jq22.js" type="text/javascript" charset="utf-8"></script>
+		<script src="__TEMPLATE__/js/responsiveslides.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$().UItoTop({ easingType: 'easeOutQuart' });
+
+				// 隐藏collapse
+				$(document).click(function(event){
+				  	var _con = $('.navbar-collapse');
+				  	if(_con.hasClass('in')){
+				  		$('.collapse').collapse('hide')
+				  	}
+				});
+
+				$(".scroll").click(function(event) {
+					event.preventDefault();
+					$('html,body').animate({ scrollTop: $(this.hash).offset().top }, 900);
+				});
+			});
+			function getCookie(name){
+				var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+				if(arr=document.cookie.match(reg))
+					return unescape(arr[2]);
+				else
+					return null;
+			}
+			if(getCookie('lan')=="EN"){
+				$(".main-im .open-im").css('background','url(__APPLICATION__/vendor/jquery-kf-150204222430/images/open_im_en.png)')
+			}else{
+				$(".main-im .open-im").css('background','url(__APPLICATION__/vendor/jquery-kf-150204222430/images/open_im.png)')
+			}
+			$("span.menu").click(function() {
+				$(".top-nav ul").slideToggle("slow", function() {});
+			});
+
+			// 回车事件
+			document.onkeydown = function(e){
+			    var ev = document.all ? window.event : e;
+			    if(ev.keyCode==13) {
+			    	$('.search-pro').click();
+		     	}
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title> 谱祥伟业科技 </title>
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="__HADMIN__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__HADMIN__/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="__HADMIN__/css/animate.css" rel="stylesheet">
+    <link href="__HADMIN__/css/style.css?v=4.1.0" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="__HADMIN__/css/plugins/dataTables/dataTables.bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="__HADMIN__/css/plugins/sweetalert/sweetalert.css"/>
+    <include file="Home@Layout/preFunction" />
+    <style>
+        /*重置sb-admin箭头样式*/
+        .table.dataTable thead .sorting_asc:after,
+        .table.dataTable thead .sorting_desc:after,
+        .table.dataTable thead .sorting:after{
+            content: "";
+        }
+    </style>
+</head>
+<body>
+<block name="content">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"style="margin-left: 20px">管理分类</h1>
+        </div><!-- /.col-lg-12 -->
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="clearfix">
+                        <form action="" class="form-inline">
+                            <button type="button" class="btn btn-outline btn-primary pull-right"   id="addGroup">新增分类</button>
+                        </form>
+                    </div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <table width="100%" class="table table-striped table-bordered table-hover KTable" id="applicationInfo" style="text-align: center;">
+                        <thead>
+                        <tr style="text-align: center">
+                            <!--<th width="10%">申请类型</th>-->
+                            <th width="25%">分类名称</th>
+                            <th width="25%">语言类型</th>
+                            <th width="25%">产品数</th>
+                            <th width="25%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table><!-- /.table-responsive -->
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div><!-- /.col-lg-12 -->
+    </div><!-- /.row -->
+    <!--模态框-->
+    <!--新增编辑-->
+    <div class="modal fade" id="applicationInfomodelOperationID" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none; font-size: 18px">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title" id=""style="text-align: center">新增产品分类</h2>
+                </div>
+                <div class="modal-body">
+                    <form id="applicationInfomodelOperationFormID" class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="add" class="col-sm-3 control-label">分类名称：</label>
+                            <div class="col-sm-6" id="message">
+                                <input type="email" class="form-control" id="add" name="type_name" placeholder="请输入分类名称" style="margin-top: 4px;">
+                            </div>
+                        </div>
+                        <div class="form-group" id="language">
+                            <label for="zh-input" class="col-sm-3 control-label">设置语言：</label>
+                            <div class="col-sm-4" style="margin-top: 4px;">
+                                <input name="language" type="radio" value="ZH"  id="zh-input" checked/>中文
+                                <input name="language" type="radio" value="EN"  id="en-input" style="margin-left:15%"/>英文
+                            </div>
+                        </div>
+                        <div id="hidden"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="modelOperationFormSubmitID">确认添加</button>
+                    <!--<a href="/ElevatorMaintenanceCloudPlatform/index.php/Maintenance/PropertyContract/ajaxUploadImage" title="上传选中文件" class="btn btn-default kv-fileinput-upload fileinput-upload-button"><i class="glyphicon glyphicon-upload"></i> 上传</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<!-- 全局js -->
+<script src="__HADMIN__/js/jquery.min.js?v=2.1.4"></script>
+<script src="__HADMIN__/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="__HADMIN__/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="__HADMIN__/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="__HADMIN__/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="__HADMIN__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="__HADMIN__/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- 自定义js -->
+<!-- 第三方插件 -->
+<script src="__HADMIN__/js/plugins/pace/pace.min.js"></script>
+</body>
+<script type="text/javascript">
+    var ElevatorInfo;
+    var propertyId='0';
+    var elevatorId ='0';
+    var applicantId='0';
+    var contentElevatorInfo;
+    var oTable;
+    var contentNum = '0';
+    $(document).ready(function() {
+        var tableHeight = document.body.clientHeight * 0.65 + 'px';
+        oTable = $('#applicationInfo').dataTable({
+            "responsive": false,
+            "bProcessing": true,
+            "sPaginationType": "full_numbers",
+            "bDestory": true,
+            "bRetrieve": true,
+            "searching":false,
+            "paging":false,
+            "dom": '<"top"l<"toolbar">f>rt<"bottom"ip><"clear">',
+            /*每页数量*/
+            "aLengthMenu": [[20, 35, 50, -1], ["20条", "35条", "50条", "全部"]],//二组数组，第一组数量，第二组说明文字;
+            /*垂直滚动条*/
+            "scrollY":tableHeight,
+            /*自定义语言*/
+            "oLanguage": {
+                "sProcessing": "正在加载数据...",
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+//                    "sZeroRecords": "抱歉， 没有找到",
+                "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据&nbsp&nbsp&nbsp",
+                "sInfoEmpty": "没有数据",
+                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                "sZeroRecords": "没有检索到数据",
+                "sSearch": "搜索",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "前一页",
+                    "sNext": "后一页",
+                    "sLast": "尾页"
+                },
+            },
+            /*请求方法*/
+            "sAjaxSource": "__URL__/selectCooperateType",
+            /*向后台传参*/
+            "fnServerParams": function (aoData) {
+                aoData.push({
+                    "name": "name",
+                    "value": "value"
+                });
+            },
+            /*列，mData的个数要与html中的td一致*/
+            "aoColumns": [
+//                    {"mData":"application_content_id"},
+                {"mData": "type_name"},
+                {"mData": "language"},
+                {"mData": "product_count"},
+                {
+                    "data":"type_id",
+                    "defaultContent":"",
+//                        "type":"contract_id",
+                    "render":function(data){
+
+                        return  '<button type="button"  id="AlertMessage" class="btn btn-success">修改</button> ' +
+                                '<button id="deleteMessage" type="button" class="btn btn-danger">删除</button>';
+                    }
+                },
+
+            ],
+
+        });
+    });
+
+    $('#addGroup').click(function () {
+        $("#applicationInfomodelOperationID").modal();
+    })
+    //点击修改按钮事件
+    $('.table').on('click','#AlertMessage',function () {
+        $('#applicationInfomodelOperationID').modal();
+        $(".table tr").removeClass('selected');
+        $(this).parent().parent().addClass('selected');
+        var arr = getDataTablesSelectedData('applicationInfo');
+//        console.log(arr[0]);
+        $('#add').val(arr[0].type_name);
+        $('#language').css('display','none');
+        $('#hidden').append('<input type="hidden" name="type_id" id="type_id" value="'+arr[0].type_id+'"><input type="hidden" name="language" value="'+arr[0].language+'"/>');
+    })
+    $('.table').on('click','#deleteMessage',function () {
+        $(".table tr").removeClass('selected');
+        $(this).parent().parent().addClass('selected');
+
+        swal({
+            title: '是否确认删除?',
+            text: "删除以后将无法恢复!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '确认删除',
+            cancelButtonText: '取消删除',
+//                cancelButtonText：'取消删除'
+        },function() {
+            loading.add();
+            var arr = getDataTablesSelectedData('applicationInfo');
+
+            var postData = {};
+            postData['type_id']=arr[0].type_id;
+            console.log(postData);
+            $.ajax({
+                type:'post',
+                data:postData,
+                url:"__URL__/deleteType",
+                dataType:'json',
+                success:function(result){
+//                    console.log(result);
+                    loading.remove();
+                    if (result.status == 0)
+                    {
+//                        $("#applicationInfomodelOperationID").modal('hide');
+                        oTable.api().ajax.reload();
+                    }
+                    else
+                    {
+                        swal({
+                            title: '删除失败!',
+                            text: '请重试！',
+                            type: 'warning',
+                            timer: 3000
+                        })
+                    }
+                },
+            });
+        });
+
+    });
+    $("#applicationInfomodelOperationID").on('hidden.bs.modal', function () {
+        $('#add').val('');
+        $('#hidden').html('');
+        $('#language').css('display','block');
+    });
+
+    //获取表格中值
+    function getDataTablesSelectedData(element){
+        var res = [];
+        for(var i=0 ;i< $('#'+element).DataTable().rows('.selected').data().length;i++){
+            res[i] = $('#'+element).DataTable().rows('.selected').data()[i];
+        }
+        return res;
+    }
+    $('#modelOperationFormSubmitID').click(function () {
+        var formData =  $('#applicationInfomodelOperationFormID').serializeArray();
+        var postData = {};
+        $(formData).each(function (i) {
+            postData[this.name] = this.value;
+        });
+        if(postData['type_name']=='')
+        {
+            return swal({
+                title: '请输入分类名称!',
+                text: '输入后确认添加！',
+                type: 'warning',
+                timer: 3000
+            })
+        }
+        else
+        {
+            loading.add();
+            $.ajax({
+                type:'post',
+                data:postData,
+                url:"__URL__/addCooperateType",
+                dataType:'json',
+                success:function(result){
+//                    console.log(result);
+                    loading.remove();
+                    if (result.status == 0)
+                    {
+                        $("#applicationInfomodelOperationID").modal('hide');
+                        oTable.api().ajax.reload();
+                    }
+                    else
+                    {
+                        swal({
+                            title: '添加失败!',
+                            text: '请重试！',
+                            type: 'warning',
+                            timer: 3000
+                        })
+                    }
+                },
+            });
+        }
+    })
+</script>
+</html>

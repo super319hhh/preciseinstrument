@@ -1,0 +1,50 @@
+<?php
+	$cond['post_messages.message_id'] = I('r');
+	$news = M('post_messages')->where($cond)
+	->join('type ON post_messages.message_type = type.type_id')
+	->find();
+?>
+<include file="Layout:header" />
+<style type="text/css">
+	.breadcrumb{
+		margin: 5em 0 46px 0;
+	    padding: 10px 20px;
+	}
+	.breadcrumb a{
+		color: #00A8C4 !important;
+	}
+	.news-detail{
+		padding-left: 20px;
+		margin-bottom: 50px;
+		min-height: 30em;
+	}
+	.news-detail h3,
+	.news-detail .news-brief{
+		text-align: center;
+	}
+	.news-detail .news-brief{
+		margin: 10px 0 50px 0;
+	}
+</style>
+<div class="main-pic">
+	<img src="__APPLICATION__/img/career.png" width="100%" alt="">
+</div>
+<div class="career">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li><a href="{:U('News/index')}"><?php echo $language['new'] ?></a></li>
+			<!-- <li><a href="">{$news['type_name']}</a></li> -->
+			<li class="active">{$news['message_title']}</li>
+		</ol>
+		<div class="news-detail">
+			<h3>{$news['message_title']}</h3>
+			<div class="news-brief">
+				发布时间：<span>{$news['post_date']} </span> 点击数：<span> {$news['view_times']}</span>
+			</div>
+			<div class="news-content">
+				{$news['message_content']}
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Layout:footer" />

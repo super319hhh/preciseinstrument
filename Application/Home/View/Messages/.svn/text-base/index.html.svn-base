@@ -1,0 +1,132 @@
+<include file="Layout:header" />
+<link href="__APPLICATION__/css/messages.css"  rel="stylesheet" type="text/css"/>
+<link href="__SWTALERT__/dist/sweetalert2.min.css" rel="stylesheet" />
+<!--<script src="__APPLICATION__/js/jquery.min.js"></script>-->
+<script src="__APPLICATION__/js/jquery.validate.min.js"></script>
+<script src="__APPLICATION__/js/messages_zh.js"></script>
+<script src="__SWTALERT__/dist/sweetalert2.min.js" type="text/javascript"></script>
+<div class="body-xinwen" style="">
+	<div class="">
+		<img width="100%" src="__APPLICATION__/img/messages.png">
+	</div>
+	<div class="messages container">
+		<div id="">
+			<span id="" class="title">
+				<?php echo $language['mesg_title'] ?>
+			</span>
+		</div>
+		
+		<form action="" method="post" id="form-add" target="nm_iframe">
+			<span id="">
+				<input class="input-xxlarge" type="text" placeholder="<?php echo $language['mesg_holde1'] ?>" id="f-title" name="theme"   required>
+			</span>
+			<br>
+			<span id="">
+				<input class="input-xxlarge" type="text" placeholder="<?php echo $language['mesg_holde2'] ?>" id="f-uname" name="name"    required>
+			</span>
+			<br>
+			<span id="">
+				<input class="input-xxlarge" type="text" placeholder="<?php echo $language['mesg_holde3'] ?>" id="f-uemal" name="mail"    required>
+			</span>
+			<br>
+				<input class="input-xxlarge" type="text" placeholder="<?php echo $language['mesg_holde4'] ?>" id="f-uads"  name="address" ><span id="" class="zwf"></span>
+			<br>
+				<input class="input-xxlarge" type="text" placeholder="<?php echo $language['mesg_holde5'] ?>" id="f-ucop"  name="company" ><span id="" class="zwf"></span>
+			<br>
+				<input class="input-xxlarge" type="text" placeholder="<?php echo $language['mesg_holde6'] ?>" id="f-uipo"  name="contact" ><span id="" class="zwf">	</span>
+			<br>
+			<span id="">
+				<textarea rows="3" placeholder="<?php echo $language['mesg_holde7'] ?>"    id="f-content" name="message" required></textarea>
+			</span>
+			<br>
+			 <!--<input class="submit" type="submit" value="确定" style="margin-top: 5.5em;width: 9.5em;height: 4.5em;" class="btn btn-primary">-->
+			<button type="button" class="btn btn-primary" id="btn-add-submit" ><?php echo $language['mesg_holde8'] ?></button>
+		</form>
+		<iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>   
+	</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $("#form-add").validate({
+	    	errorPlacement: function(error, element) {
+				$( element ).parent().append( error );
+			},
+			onfocusout: function(element) { $(element).valid(); }, //当丢失焦点时才触发验证请求
+		    messages:{
+	            theme:{
+	                required: '*'
+	            },
+	            name:{
+	                required: '*'
+	            },
+	            mail:{
+	                required: '*'
+	            },
+	            message:{
+	                required: '*'
+	            }
+	        }
+	    });
+	});
+	$('#btn-add-submit').click(function(){
+		$('.zwf').html("&nbsp;");;
+		$('#form-add').submit();
+	});
+	$.validator.setDefaults({
+		submitHandler: function() {
+			var formData = $('#form-add').serializeArray();
+			var postData = {};
+			$(formData).each(function(i){
+				postData[this.name] = this.value;
+			});
+			$.ajax({
+				type:'post',
+				url:"__URL__/add",
+				data:postData,
+				success:function(data){
+					if(data==true){
+	            		swal("<?php echo $language['mesg_sthk'] ?>", "<?php echo $language['mesg_sus'] ?>", "success").then(function(isConfirm) {
+					             		location.reload(true);
+				            	})
+					}else{
+			     		swal(
+						  "<?php echo $language['mesg_ethk']?>",
+						  "<?php echo $language['mesg_err'] ?>",
+						  'error'
+						)
+			     	}
+				},
+			});
+		}
+	});	
+		
+		
+		
+//		//为提交新增数据按钮添加事件
+//	$('#btn-add-submit').click(function(){
+//		var formData = $('#form-add').serializeArray();
+//		var postData = {};
+//		$(formData).each(function(i){
+//			postData[this.name] = this.value;
+//		});
+//		$.ajax({
+//			type:'post',
+//			url:"__URL__/add",
+//			data:postData,
+//			success:function(data){
+//				if(data==true){
+//          		swal("<?php echo $language['mesg_sthk'] ?>", "<?php echo $language['mesg_sus'] ?>", "success").then(function(isConfirm) {
+//				             		location.reload(true);
+//			            	})
+//				}else{
+//		     		swal(
+//					  "<?php echo $language['mesg_ethk']?>",
+//					  "<?php echo $language['mesg_err'] ?>",
+//					  'error'
+//					)
+//		     	}
+//			},
+//		});
+//		
+//	});
+</script>	
+<include file="Layout:footer" />

@@ -1,0 +1,50 @@
+.career .container{
+	/*min-height: 40em;*/
+}
+.breadcrumb{
+	margin: 3em 0;
+    padding: 10px 20px;
+}
+.breadcrumb a{
+	color: #00A8C4 !important;
+}
+.career-detail{
+	padding-left: 20px;
+	margin-bottom: 50px;
+	min-height: 20em;
+}
+.apply{
+    background: #FFA42E;
+	margin-left: 20px;
+	padding: 8px 12px;
+    border: none;
+    color: #FFF;
+    margin-bottom: 50px;
+}
+.apply:hover{
+	background: #f29e0d;
+}
+@media(max-width:768px) {
+	.breadcrumb{
+		margin: 0;
+	}
+}
+@media(max-width:480px) {
+	.breadcrumb{
+		padding: 10px;
+	}
+	.career-detail{
+		padding-left: 0;
+		min-height: 15em;
+	}
+}
+@media(max-width:480px) {
+	.breadcrumb{
+		width: 95%;
+		margin: 10px auto;
+	}
+	.career-detail{
+		width: 95%;
+		margin: 0 auto;
+	}
+}

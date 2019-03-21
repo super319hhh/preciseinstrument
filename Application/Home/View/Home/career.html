@@ -1,0 +1,167 @@
+<include file="Layout:header" />
+<link href="__APPLICATION__/css/career.css" rel="stylesheet" type="text/css"/>
+<div class="main-pic">
+	<img src="__APPLICATION__/img/career.png" width="100%" alt="">
+
+</div>
+<div class="container" style="position: relative;">
+	<div class="search">
+		<input type="text" name="search" placeholder="<?php if(cookie('lan') == 'EN') echo 'Please enter keywords here'; else echo '请在此输入关键字'; ?>" class="search-input">
+		<a href="javascript:;" search-type="pro" class="search-pro search-submit"><?php if(cookie('lan') == 'EN') echo "pros"; else echo "搜产品"; ?></a>
+		<a href="javascript:;" search-type="all" class="search-all search-submit"><?php if(cookie('lan') == 'EN') echo "others"; else echo "搜综合"; ?></a>
+	</div>
+</div>
+<div class="career">
+	<div class="career-nav common-title">
+		<ul>
+			<empty name="Think.get.t">
+				<volist name="careerType" id="vo">
+					<li class="<eq name="key" value="0">active</eq>" type-id="{$vo['type_id']}" ><a href="javascript:;">{$vo['type_name']}</a></li>
+				</volist>
+			<else />
+				<volist name="careerType" id="vo">
+					<li class="<if condition="$vo['type_id'] eq I('t')">active</if>" type-id="{$vo['type_id']}" ><a href="javascript:;">{$vo['type_name']}</a></li>
+				</volist>
+			</empty>
+		</ul>
+	</div>
+	<div class="container">
+		<div class="career-content">
+			<table border="2" frame="hsides" class="career-content--table" width="100%">
+				<thead>
+					<tr>
+						<th width="15%"><?php echo $language['recruit_num'] ?></th>
+						<th width="23%"><?php echo $language['recruit_post'] ?></th>
+						<th width="20%"><?php echo $language['recruit_date'] ?></th>
+						<th width="20%"><?php echo $language['recruit_person'] ?></th>
+						<th width="22%"><?php echo $language['recruit_more'] ?></th>
+					</tr>
+				</thead>
+				<tbody id="careerList">
+					<empty name="postInfo">
+						<tr>
+							<?php
+								if(cookie('lan') == 'EN'){
+									echo '<td colspan="5">This column is no recruitment information</td>';
+								}else{
+									echo '<td colspan="5">该栏目没有招聘信息</td>';
+								}
+							?>
+						</tr>
+					<else />
+						<volist name="postInfo" id="vo">
+							<tr>
+								<td>{$key+1}</td>
+								<td>{$vo['position_name']}</td>
+								<td>{$vo['recruit_date']|strtotime|date="Y-m-d",###}</td>
+								<td>{$vo['recruit_numbers']}</td>
+								<td>
+									<button type="button" onclick="window.open('__URL__/career_detail?r={$vo.recruit_id}')" class="show-detail"><?php echo $language['recruit_btn_1'] ?></button>
+									<button type="button" onclick="window.open('__URL__/career_apply?r={$vo.position_id}')" class="apply"><?php echo $language['recruit_btn_2'] ?></button>
+								</td>
+							</tr>
+						</volist>
+					</empty>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('.career-nav li').click(function(){
+		$('.career-nav li').removeClass('active');
+		$(this).addClass('active');
+		var typeId = $(this).attr('type-id');
+		$.ajax({
+			type: 'post',
+			url: '__URL__/chooseType',
+			data:{
+				'recruit_type' :typeId
+			},
+			dataType: 'json',
+			success: function(result){
+				if (result.status == 1) {
+					$('#careerList').empty();
+					var sOut = '';
+					for (var i = 0; i < result.data.length; i++) {
+						if (result.data[i].language == 'EN') {
+							var recruit_btn_1 = 'Detail',
+								recruit_btn_2 = 'Apply';
+						}else{
+							var recruit_btn_1 = '查看详情',
+								recruit_btn_2 = '申请职位';
+						}
+						sOut += '<tr><td>'+(i+1)+'</td><td>'+result.data[i].position_name+'</td><td>'+result.data[i].recruit_date.substring(0,10)+'</td><td>'+result.data[i].recruit_numbers+'</td><td><button type="button" onclick="window.open(\'__URL__/career_detail?r='+result.data[i].recruit_id+'\')" class="show-detail">'+recruit_btn_1+'</button><button type="button" onclick="window.open(\'__URL__/career_apply?r='+result.data[i].recruit_id+'\')" class="apply">'+recruit_btn_2+'</button></td></tr>';
+					}
+					$('#careerList').html(sOut);
+				}else{
+					$('#careerList').empty();
+					$('#careerList').html('<?php if(cookie('lan') == 'EN'){echo '<td colspan="5">This column is no recruitment information</td>';}else{echo '<td colspan="5">该栏目没有招聘信息</td>';} ?>');
+				}
+			}
+		});
+	});
+	function getCookie(name){
+		var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+		if(arr=document.cookie.match(reg))
+			return unescape(arr[2]);
+		else
+			return null;
+	}
+	if (getCookie('lan') == 'EN') {
+			notice_1 = 'Search',
+			notice_2 = 'a total of',
+			notice_3 = 'results',
+			errorRes = 'no results';
+			career = 'careers';
+			news = 'news';
+	} else {
+			notice_1 = '搜索',
+			notice_2 = '共有',
+			notice_3 = '条结果',
+			errorRes = '没有结果';
+			career = '招聘信息';
+			news = '新闻动态';
+	}
+	$('.search-submit').click(function(){
+		var searchC = $('.search-input').val(),
+			searchType = $(this).attr('search-type');
+		$.ajax({
+			type: 'post',
+			url: '__URL__/search',
+			data:{
+				'search_type': searchType,
+				'search_content': searchC
+			},
+			dataType: 'json',
+			success: function(result){
+				if (result.status == 1) {
+					$('.career').empty();
+					var sOut = '<div class="container search-res"><ul><li><span>'+notice_1+'“'+searchC+'”'+notice_2+result.data.length+notice_3+'</span></li>';
+					for (var i = 0; i < result.data.length; i++) {
+						sOut += '<li><a href="__MODULE__/ProductManage/product_manage?product_id='+result.data[i].product_id+'">'+result.data[i].product_name+'</a></li>';
+					}
+					sOut += '</ul></div>';
+					$('.career').html(sOut);
+				}else if (result.status == 2) {
+					$('.career').empty();
+					var sOut = '<div class="container search-res"><ul><li><span>'+notice_1+'“'+searchC+'”'+notice_2+result.data['total']+notice_3+'</span></li>';
+					for (var i = 0; i < result.data['career'].length; i++) { // 招聘
+						var r = result.data['career'][i].position_id;
+						sOut += '<li><a href="__MODULE__/Home/career_detail?r='+result.data['career'][i].position_id+'">'+result.data['career'][i].position_name+' -- '+career+'</a></li>';
+					}
+					for (var i = 0; i < result.data['new'].length; i++) { // 新闻
+						sOut += '<li><a href="__MODULE__/Home/new_detail?r='+result.data['new'][i].message_id+'">'+result.data['new'][i].message_title+' -- '+news+'</a></li>';
+					}
+					sOut += '</ul></div>';
+					$('.career').html(sOut);
+				}else{
+					$('.career').empty();
+					$('.career').html('<div class="container">'+errorRes+'</div>');
+				}
+			}
+		});
+	});
+</script>
+<include file="Layout:footer" />

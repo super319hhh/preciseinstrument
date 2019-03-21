@@ -1,0 +1,191 @@
+<include file="Layout:header" />
+<link href="__APPLICATION__/css/news.css"       rel="stylesheet" type="text/css"/>
+<link href="__APPLICATION__/css/career.css" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+	.gong div {
+		border-bottom:4px solid  #00A8C4;
+		color: #00A8C4;
+	}
+	.breadcrumb  li a{
+		 color:#00A8C4;
+	}
+	.search{
+		top: -7em;
+	}
+</style>
+<div class="body-xinwen" style="">
+	<div class="tupiankj">
+		<img width="100%" src="__APPLICATION__/img/news_top.png">
+		<!--<div class="input-group container biank" >
+		    <input type="text" class="form-control input-lg" id="seach-input" placeholder="<?php echo $language['new_sp'] ?>"><span class="input-group-addon btn btn-info" id="add-search"> <?php echo $language['new_search'] ?></span>
+		</div>-->
+	</div>
+	<div class="container" style="position: relative;">
+		<div class="search">
+			<input type="text" name="search" placeholder="<?php if(cookie('lan') == 'EN') echo 'Please enter keywords here'; else echo '请在此输入关键字'; ?>" class="search-input">
+			<a href="javascript:;" search-type="pro" class="search-pro search-submit"><?php if(cookie('lan') == 'EN') echo "pros"; else echo "搜产品"; ?></a>
+			<a href="javascript:;" search-type="all" class="search-all search-submit"><?php if(cookie('lan') == 'EN') echo "others"; else echo "搜综合"; ?></a>
+		</div>
+	</div>
+	<div class="res" style="min-height: 500px;">
+		<?php
+		                if(cookie('lan') == 'EN'){
+		                echo '<div class="ngate-div container common-title common-title1" id="macji"><ul  class="macji-skin">';
+		                }else
+		                {
+		                 echo '<div class="ngate-div container common-title" id="macji"><ul  class="macji-skin-c">';
+		                }
+		              ?>
+					<li  class="qie-type   common-title">
+						<a href="{:U('News/index')}" >
+							<div class="" attrid="10">
+								<?php echo $language['new_title1'] ?>
+							</div>
+						</a>
+					</li>
+					<li  class="qie-type gong common-title">
+						<a href="{:U('News/news')}">
+							<div class="" attrid="11">
+								<?php echo $language['new_title2'] ?>
+							</div>
+						</a>
+					</li>
+					<li  class="qie-type gong2 common-title">
+						<a href="{:U('News/Promotions')}">
+							<div class="" attrid="11">
+								<?php echo $language['new_title3'] ?>
+							</div>
+						</a>
+					</li>
+				</ul>
+		</div>
+		<div class="clearfix"></div>
+		<div id="content" class="container">
+			<div class="wrapper-mu">
+				<div class="detail">
+					<ul>
+						<volist name="news" id="vo">
+							<li class="news-content">
+								<a href="javascript:;" id="newsdate" attr-news="{$vo.message_id}">
+									<h5>{$vo['message_title']}<span>{$vo['post_date']}</span></h5>
+								</a>
+								<div></div>
+							</li>
+						</volist>
+					</ul>
+				</div>
+				<nav class="fenye">
+					<ul class="pagination">
+						{$pageRes}
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+<!--<div ><iframe id="test" src="test.html"></iframe></div>
+document.getElementById("test").src="new.html";-->
+<script type="text/javascript">
+//标题间切换样式
+	$('.qie-type').on('click','div',function(){
+//each 是把所有的符合条件的元素取出来 执行下面的方法 每一个元素都会执行一次 在这里是 把所有的样式都取消在下面加上想要的css
+		$('.qie-type a div').each(function(){
+			$(this).css({'border-bottom':'none','color': '#000000'});
+		})
+		$(this).css({'border-bottom':'5px solid #00a8c4','color': '#00a8c4'});
+		$(this).click();
+	})
+
+	//新闻详情
+	$('.news-content').on('click','#newsdate',function(){
+		var news = $(this).attr('attr-news');
+		$.ajax({
+           	type:"post",
+       		url:"__URL__/getNews",
+           	data:{
+           		"news": news,
+           	},
+           	dataType:"json",
+           	success:function(result){
+           		if (result.status ==1) {
+           			$('#content').empty();
+           			$('#macji').empty();
+           			$('#content').append('<ol class="breadcrumb">'+
+           				'<li>'+'<a href="__URL__/news">'+"<?php echo $language['new_title2'] ?>"+'</a>'+'</li>'+
+	           			'<li class="active">'+result.data.message_title+'</li>'+'</ol>');
+           			$('#content').append('<h2 class="news-title-h">'+result.data.message_title+'</h2>');
+           			$('#content').append('<h6 class="news-title-s">'+'<span>'+"<?php echo $language['new_time'] ?>:"+'&nbsp;'+result.data.post_date+'&nbsp;'+'&nbsp;'+'&nbsp;'+'&nbsp;'+"<?php echo $language['new_person'] ?> :"+'&nbsp;'+"<?php echo $language['new_pname'] ?> "+'&nbsp;'+'&nbsp;'+'&nbsp;'+'&nbsp;'+"<?php echo $language['new_clicks'] ?> :"+'&nbsp;'+result.data.view_times+'</span>'+'</h6>');
+           			$('#content').append('<div class="news_detail"><p>'+result.data.message_content+'</p></div>');
+           		}
+           	}
+   		});
+	});
+	//点击搜索
+
+	function getCookie(name){
+		var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+		if(arr=document.cookie.match(reg))
+			return unescape(arr[2]);
+		else
+			return null;
+	}
+	if (getCookie('lan') == 'EN') {
+			notice_1 = 'Search',
+			notice_2 = 'a total of',
+			notice_3 = 'results',
+			errorRes = 'no results';
+			career = 'careers';
+			news = 'news';
+	} else {
+			notice_1 = '搜索',
+			notice_2 = '共有',
+			notice_3 = '条结果',
+			errorRes = '没有结果';
+			career = '招聘信息';
+			news = '新闻动态';
+	}
+	$('.search-submit').click(function(){
+		var searchC = $('.search-input').val(),
+			searchType = $(this).attr('search-type');
+		$.ajax({
+			type: 'post',
+			url: '__MODULE__/Home/search',
+			data:{
+				'search_type': searchType,
+				'search_content': searchC
+			},
+			dataType: 'json',
+			success: function(result){
+				if (result.status == 1) {
+					$('.res').empty();
+					var sOut = '<div class="container search-res"><ul><li><span>'+notice_1+'“'+searchC+'”'+notice_2+result.data.length+notice_3+'</span></li>';
+					for (var i = 0; i < result.data.length; i++) {
+						sOut += '<li><a href="__MODULE__/ProductManage/product_manage?product_id='+result.data[i].product_id+'">'+result.data[i].product_name+'</a></li>';
+					}
+					sOut += '</ul></div>';
+					$('.res').html(sOut);
+				}else if (result.status == 2) {
+					$('.res').empty();
+					var sOut = '<div class="container search-res"><ul><li><span>'+notice_1+'“'+searchC+'”'+notice_2+result.data['total']+notice_3+'</span></li>';
+					for (var i = 0; i < result.data['career'].length; i++) { // 招聘
+						sOut += '<li><a href="__MODULE__/Home/career_detail?r='+result.data['career'][i].position_id+'">'+result.data['career'][i].position_name+' -- '+career+'</a></li>';
+					}
+					for (var i = 0; i < result.data['new'].length; i++) { // 新闻
+						sOut += '<li><a href="__MODULE__/Home/new_detail?r='+result.data['new'][i].message_id+'">'+result.data['new'][i].message_title+' -- '+news+'</a></li>';
+					}
+					sOut += '</ul></div>';
+					$('.res').html(sOut);
+				}else{
+					$('.res').empty();
+					$('.res').html('<div class="container">'+errorRes+'</div>');
+				}
+			}
+		});
+	});
+
+
+
+
+
+</script>
+<include file="Layout:footer" />

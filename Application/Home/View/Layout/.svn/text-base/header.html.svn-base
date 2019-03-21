@@ -1,0 +1,170 @@
+<?php
+	$cond_EN = array(
+		'language' => 'EN',
+	);
+	$cond_ZH = array(
+		'language' => 'ZH',
+	);
+	if(cookie('lan') == 'EN'){
+		$company = M('company')->where($cond_EN)->find();
+		$prosType = D('Common/type')->getTypeList('产品管理',$cond_EN);
+		$newsType = D('Common/type')->getTypeList('新闻管理',$cond_EN);
+		$partnersType = D('Common/type')->getTypeList('合作管理',$cond_EN);
+		$careerType = D('Common/type')->getTypeList('招聘管理',$cond_EN);
+	}else{
+		$company = M('company')->where($cond_ZH)->find();
+		$prosType = D('Common/type')->getTypeList('产品管理',$cond_ZH);
+		$newsType = D('Common/type')->getTypeList('新闻管理',$cond_ZH);
+		$partnersType = D('Common/type')->getTypeList('合作管理',$cond_ZH);
+		$careerType = D('Common/type')->getTypeList('招聘管理',$cond_ZH);
+	}
+
+    $tel =  D('Company')->where(array('id'=>1))->find();
+    $telQQ = explode('/',$tel['qq']);
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<if condition="cookie('lan') eq 'EN' ">
+			<title>PuXiangWeiYe</title>
+		<else/>
+			<title>天津谱祥伟业科技</title>
+		</if>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<!-- for-mobile-apps -->
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="" />
+
+		<link href="__ROOT__/favicon.ico" rel="shortcut icon">
+		<link href="__TEMPLATE__/css/bootstrap.css" rel="stylesheet">
+		<link href="__TEMPLATE__/css/style.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="__APPLICATION__/css/common.css" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" type="text/css" href="__APPLICATION__/vendor/jquery-kf-150204222430/css/style.css"/>
+		<link href="__APPLICATION__css/kCommon.css?_=<?php echo time()?>" rel="stylesheet">
+
+		<script type="application/x-javascript">
+			addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+
+			function hideURLbar() { window.scrollTo(0, 1); }
+		</script>
+		<script src="__TEMPLATE__/js/jquery.min.js"></script>
+		<script src="__TEMPLATE__/js/bootstrap.js"></script>
+	</head>
+
+	<body style="overflow-y: scroll;overflow-x: auto;">
+		<!--header-->
+		<div>
+			<?php $lan = cookie('lan') ?: (I('language') ?: 'ZH'); $language = C('KMC_language')[$lan];?>
+			<div class="header" style="position: fixed; z-index: 1;box-sizing: border-box;">
+				<div class="logo">
+					<a href="{:U('Home/home')}"><img src="__APPLICATION__/img/logo.png" /> <span><?php echo $language['title'] ?></span></a>
+				</div>
+				<div class="navigation">
+					<nav class="navbar navbar-default">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"> </span>
+								<span class="icon-bar"> </span>
+								<span class="icon-bar"> </span>
+						  	</button>
+						</div>
+						<div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav">
+								<li class="main-nav <eq name="ACTION_NAME" value="home">active</eq>">
+									<a href="{:U('Home/home')}"><?php echo $language['Home'] ?> <span class="sr-only">(current)</span></a>
+								</li>
+								<!-- 产品介绍 -->
+								<li class="main-nav <if condition="ACTION_NAME eq index_0 OR ACTION_NAME eq product_manage OR ACTION_NAME eq search_result OR ACTION_NAME eq index_1 OR ACTION_NAME eq index_2 OR ACTION_NAME eq index_3 OR ACTION_NAME eq index_4 OR ACTION_NAME eq index_5 OR ACTION_NAME eq index_6 OR ACTION_NAME eq index_7">active</if>">
+									<a href="{:U('ProductManage/index_0')}"><?php echo $language['Products'] ?></a>
+									<ul class="nav-dropdown">
+										<volist name="prosType" id="vo">
+											<li><a href="__MODULE__/ProductManage/index_{$key}">{$vo['type_name']}</a></li>
+										</volist>
+									</ul>
+								</li>
+								<!-- 新闻动态 -->
+								<li class="main-nav <if condition="CONTROLLER_NAME eq News OR ACTION_NAME eq new_detail">active</if>">
+									<a href="{:U('News/index')}"><?php echo $language['News'] ?></a>
+									<ul class="nav-dropdown">
+										<li><a href="{:U('News/index')}"><?php echo $language['new_title1'] ?></a></li>
+										<li><a href="{:U('News/news')}"><?php echo $language['new_title2'] ?></a></li>
+										<li><a href="{:U('News/Promotions')}"><?php echo $language['new_title3'] ?></a></li>
+									</ul>
+								</li>
+								<!-- 招贤纳士 -->
+								<li class="main-nav <if condition="ACTION_NAME eq career OR ACTION_NAME eq career_detail OR ACTION_NAME eq career_apply">active</if>">
+									<a href="{:U('Home/career')}"><?php echo $language['Career'] ?></a>
+									<ul class="nav-dropdown">
+										<volist name="careerType" id="vo">
+											<li><a href="__MODULE__/Home/career?t={$vo['type_id']}">{$vo['type_name']}</a></li>
+										</volist>
+									</ul>
+								</li>
+								<!-- 联系我们 -->
+								<li class="main-nav <eq name="CONTROLLER_NAME" value="Company">active</eq>">
+									<a href="{:U('Company/index')}"><?php echo $language['Contact'] ?></a>
+								</li>
+							</ul>
+							<div class="clearfix"> </div>
+						</div>
+						<!-- /.navbar-collapse -->
+						<div class="changel">
+							<if condition="cookie('lan') eq 'EN' ">
+								<a href="javascript:;" lan="ZH" id="changeLanguage">
+									<img src="__APPLICATION__/img/zh.png">
+								</a>
+						    <else />
+								<a href="javascript:;" lan="EN" id="changeLanguage">
+									<img src="__APPLICATION__/img/en.png">
+								</a>
+							</if>
+						</div>
+					</nav>
+				</div>
+				<script type="text/javascript">
+					$(document).ready(function() {
+						// 切换语言
+						document.getElementById('changeLanguage').onclick = function(event){
+							var language = this.getAttribute('lan');
+							// 切换跳首页
+							// window.location.href = '__MODULE__/Home/home?language='+ (language === 'EN' ? 'EN':'ZH');
+							window.location.href = '__ACTION__?language=' + language;
+							// document.cookie = "lan=" + language;
+						}
+					});
+
+				</script>
+				<div class="clearfix"> </div>
+			</div>
+			<block name="banner"></block>
+		</div>
+		<!--/header-->
+		<div class="main-im">
+			<?php $language =  C('KMC_language')["$lan"];?>
+			<div id="open_im" class="open-im">&nbsp;</div>
+			<div class="im_main" id="im_main">
+				<div id="close_im" class="close-im"><a href="javascript:void(0);" title="QQ在线咨询">&nbsp;</a></div>
+				<a href="http://wpa.qq.com/msgrd?v=3&uin={$telQQ[0]}&site=qq&menu=yes" target="_blank" class="im-qq qq-a" title="QQ在线咨询">
+					<div class="qq-container"></div>
+					<div class="qq-hover-c"><img class="img-qq" src="__APPLICATION__/vendor/jquery-kf-150204222430/images/qq.png"></div>
+					<span><?php echo $language['QQ Online consulting'] ?></span>
+				</a>
+				<div class="im-footer" style="position:relative">
+					<div class="weixing-container">
+						<div class="weixing-show">
+							<div class="weixing-txt"><?php echo $language['WeChat'] ?><br><?php echo $language['Add attention'] ?></div>
+							<img class="weixing-ma" src="{$tel.wechat}">
+							<div class="weixing-sanjiao"></div>
+							<div class="weixing-sanjiao-big"></div>
+						</div>
+					</div>
+					<div class="go-top"><a href="javascript:;" title=""></a> </div>
+					<div style="clear:both"></div>
+				</div>
+			</div>
+		</div>

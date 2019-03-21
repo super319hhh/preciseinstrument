@@ -1,0 +1,35 @@
+ <!doctype html>
+ <html lang="en">
+ <head>
+ 	<meta charset="UTF-8" />
+ 	<title>Document</title>
+ </head>
+ <body>
+ 	<!--取出语言变量-->
+ 	<?php $language =  C('KMC_language')["$lan"];?>
+ 	<!--使用-->
+ 	<div id="demo">
+ 		......
+ 	</div>
+ 	<?php echo $language['Home'] ?>
+ 	<div id="demo2">
+ 		......
+ 	</div>
+ 	<?php echo $language['Product'] ?>
+ 	<div id="demo3">
+ 		换语言
+ 	</div>
+ 	<button id="changeLanguage">
+ 		<?php if($lan == 'EN'){
+ 			echo	'ZH';
+ 		}else{
+ 			echo	'EN';
+ 		} ?>
+ 	</button>
+ </body>
+ <script>
+ 	document.getElementById('changeLanguage').onclick = function(){
+ 		window.location.href = '__URL__?language='+ (this.innerText === 'EN' ? 'EN':'ZH');
+ 	}
+ </script>
+ </html>

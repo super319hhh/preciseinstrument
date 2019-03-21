@@ -1,0 +1,204 @@
+<include file="Layout:header" />
+<link rel="stylesheet" type="text/css" href="__APPLICATION__/css/company.css"/>
+<link href="__APPLICATION__/css/messages.css"  rel="stylesheet" type="text/css"/>
+<link href="__SWTALERT__/dist/sweetalert2.min.css" rel="stylesheet" />
+<link href="__APPLICATION__/css/career.css" rel="stylesheet" type="text/css"/>
+<link href="__APPLICATION__/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="__APPLICATION__/css/news.css"       rel="stylesheet" type="text/css"/>
+<!--<script src="__APPLICATION__/js/jquery.min.js"></script>-->
+<script src="__APPLICATION__/js/jquery.validate.min.js"></script>
+<script src="__APPLICATION__/js/messages_zh.js"></script>
+<script src="__SWTALERT__/dist/sweetalert2.min.js" type="text/javascript"></script>
+<style type="text/css">
+	.gongsid div {
+		border-bottom:4px solid  #00A8C4;
+		 color:#00A8C4;
+	}
+	@media (max-width: 470px) {
+		#macji .macji-skin li {
+		    margin: 10px 15px;
+		    padding: 0;
+		    height: 3em;
+		}
+	}
+</style>
+	<div>
+		<img class="main-pic" src="__APPLICATION__/img/cooperationbanner.png"/>
+	</div>
+
+	<div class="container" style="position: relative;">
+		<div class="search" style="top: -7em;">
+			<input type="text" name="search" placeholder="<?php if(cookie('lan') == 'EN') echo 'Please enter keywords here'; else echo '请在此输入关键字'; ?>" class="search-input">
+			<a href="javascript:;" search-type="pro" class="search-pro search-submit"><?php if(cookie('lan') == 'EN') echo "pros"; else echo "搜产品"; ?></a>
+			<a href="javascript:;" search-type="all" class="search-all search-submit"><?php if(cookie('lan') == 'EN') echo "others"; else echo "搜综合"; ?></a>
+		</div>
+	</div>
+
+	<?php $language =  C('KMC_language')["$lan"];?>
+	<div class="res" style="min-height: 500px;overflow: hidden;">
+		<div class="ngate-div container common-title" id="macji">
+					<?php
+		                if(cookie('lan') == 'EN'){
+		                echo '<ul  class="macji-skin">';
+		                }else
+		                {
+		                 echo '<ul  class="macji-skin-c">';
+		                }
+		              ?>
+						<li  class="qie-type gongsid common-title">
+							<a href="{:U('Company/index')}" >
+								<div class="" attrid="10">
+									<?php echo $language['Company'] ?>
+								</div>
+							</a>
+						</li>
+						<li  class="qie-type gong common-title">
+							<a href="{:U('Company/messages')}" >
+								<div class="" attrid="11">
+									<?php echo $language['mesg_title'] ?>
+								</div>
+							</a>
+						</li>
+					</ul>
+			</div>
+
+		<!-- <figure class="mc-map container">
+			<iframe width="100%" height="100%" frameborder="0" src="{:U('Company/map')}" scrolling="no" seamless></iframe>
+		</figure>
+		<div class="mc-content container" >
+			<div class="mc-i-content">
+				<p class="mc-p-content">
+					<?php echo $language['CompanyName'] ?>：{$res.company_name}
+				</p>
+				<p class="mc-p-content">
+					<?php echo $language['CompanyAddress'] ?>：{$res.company_address}
+				</p>
+				<p class="mc-p-content">
+					<?php echo $language['CompanyZip'] ?>：{$res.zip}
+				</p>
+				<p class="mc-p-content">
+					<?php echo $language['tel'] ?>：{$res.tel}
+				</p>
+				<p class="mc-p-content">
+					<?php echo $language['CompanyFax'] ?>：{$res.fax}
+				</p>
+				<p class="mc-p-content">
+					<?php echo $language['mail'] ?>：{$res.mail}
+				</p>
+			</div>
+		</div> -->
+		<div class="contact_us" style="padding-top: 0;">
+			<div class="container">
+				<div class="grid">
+					<figure>
+						<iframe width="100%" height="100%" frameborder="0" src="{:U('Home/map')}" scrolling="no" seamless></iframe>
+					</figure>
+					<figure>
+						<div class="company-info">
+							<dl>
+								<dt><?php echo $language['company_name'] ?>：</dt>
+								<dd>
+									{$company['company_name']}
+								</dd>
+							</dl>
+							<dl>
+								<dt><?php echo $language['company_add'] ?>：</dt>
+								<dd>
+									{$company['company_address']}
+								</dd>
+							</dl>
+							<dl>
+								<dt><?php echo $language['company_zip'] ?>：</dt>
+								<dd>
+									{$company['zip']}
+								</dd>
+							</dl>
+							<dl>
+								<dt><?php echo $language['company_tel'] ?>：</dt>
+								<dd>
+									{$company['tel']}
+								</dd>
+							</dl>
+							<dl>
+								<dt><?php echo $language['company_fax'] ?>：</dt>
+								<dd>
+									{$company['fax']}
+								</dd>
+							</dl>
+							<dl>
+								<dt><?php echo $language['company_mail'] ?>：</dt>
+								<dd>
+									{$company['mail']}
+								</dd>
+							</dl>
+						</div>
+					</figure>
+					<div class="clearfix"> </div>
+				</div>
+			</div>
+		</div>
+</div>
+
+<script type="text/javascript">
+	function getCookie(name){
+		var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+		if(arr=document.cookie.match(reg))
+			return unescape(arr[2]);
+		else
+			return null;
+	}
+	if (getCookie('lan') == 'EN') {
+			notice_1 = 'Search',
+			notice_2 = 'a total of',
+			notice_3 = 'results',
+			errorRes = 'no results';
+			career = 'careers';
+			news = 'news';
+	} else {
+			notice_1 = '搜索',
+			notice_2 = '共有',
+			notice_3 = '条结果',
+			errorRes = '没有结果';
+			career = '招聘信息';
+			news = '新闻动态';
+	}
+	$('.search-submit').click(function(){
+		var searchC = $('.search-input').val(),
+			searchType = $(this).attr('search-type');
+		$.ajax({
+			type: 'post',
+			url: '__MODULE__/Home/search',
+			data:{
+				'search_type': searchType,
+				'search_content': searchC
+			},
+			dataType: 'json',
+			success: function(result){
+				if (result.status == 1) {
+					$('.res').empty();
+					var sOut = '<div class="container search-res"><ul><li><span>'+notice_1+'“'+searchC+'”'+notice_2+result.data.length+notice_3+'</span></li>';
+					for (var i = 0; i < result.data.length; i++) {
+						sOut += '<li><a href="__MODULE__/ProductManage/product_manage?product_id='+result.data[i].product_id+'">'+result.data[i].product_name+'</a></li>';
+					}
+					sOut += '</ul></div>';
+					$('.res').html(sOut);
+				}else if (result.status == 2) {
+					$('.res').empty();
+					var sOut = '<div class="container search-res"><ul><li><span>'+notice_1+'“'+searchC+'”'+notice_2+result.data['total']+notice_3+'</span></li>';
+					for (var i = 0; i < result.data['career'].length; i++) { // 招聘
+						sOut += '<li><a href="__MODULE__/Home/career_detail?r='+result.data['career'][i].position_id+'">'+result.data['career'][i].position_name+' -- '+career+'</a></li>';
+					}
+					for (var i = 0; i < result.data['new'].length; i++) { // 新闻
+						sOut += '<li><a href="__MODULE__/Home/new_detail?r='+result.data['new'][i].message_id+'">'+result.data['new'][i].message_title+' -- '+news+'</a></li>';
+					}
+					sOut += '</ul></div>';
+					$('.res').html(sOut);
+				}else{
+					$('.res').empty();
+					$('.res').html('<div class="container">'+errorRes+'</div>');
+				}
+			}
+		});
+	});
+</script>
+<include file="Layout:footer" />

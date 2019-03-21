@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>招聘管理</title>
+	<link href="__HADMIN__/css/bootstrap.min.css" rel="stylesheet">
+	<link href="__HADMIN__/css/font-awesome.min.css" rel="stylesheet">
+	<link href="__HADMIN__/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+	<link href="__VENDOR__/layui/css/layui.css" rel="stylesheet">
+	<link href="__HADMIN__/css/plugins/summernote/summernote.css" rel="stylesheet">
+    <link href="__HADMIN__/css/plugins/summernote/summernote-bs3.css" rel="stylesheet">
+    <link href="__HADMIN__/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+	<!-- <link href="__VENDOR__/fileinput/css/fileinput.min.css" rel="stylesheet"> -->
+	<link href="__HADMIN__/css/style.css" rel="stylesheet">
+	<link href="__ADMIN__/css/post_m.css" rel="stylesheet">
+	<link href="__ADMIN__/css/common.css" rel="stylesheet">
+</head>
+<body>
+	<div class="wrapper wrapper-content">
+  		<h1 class="page-header">招聘管理</h1>
+  		<!-- panel -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="clearfix">
+				<a class="btn btn-primary pull-right" data-toggle="modal" href='#newPost'>发布</a>
+				</div>
+			</div>
+			<div class="panel-body">
+				<table width="100%" id="postTb" class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>编号</th>
+							<th>职位</th>
+							<th>日期</th>
+							<th>类型</th>
+							<th>招人数</th>
+							<th>点击量</th>
+							<th>详情</th>
+							<th>状态</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div><!-- panel end -->
+	</div>
+	<!-- newPost modal -->
+	<div class="modal fade" id="newPost">
+		<div class="modal-dialog" style="width: 80%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">发布职位</h4>
+				</div>
+				<div class="modal-body">
+					<form id="newPostForm" class="layui-form">
+						<div class="row refresh">
+							<!-- 职位名称 -->
+							<div class="col-md-6">
+								<label class="layui-form-label">
+									<span>职</span><span>位</span><span>名</span><span>称:</span>
+								</label>
+								<div class="layui-input-block">
+									<select name="position_id" lay-search required>
+										<option value=""></option>
+										<volist name="recruitPosition" id="vo">
+											<option value="{$vo['position_id']}">{$vo['position_name']}</option>
+										</volist>
+									</select>
+								</div>
+							</div>
+							<!-- 类型 -->
+							<div class="col-md-6">
+								<label class="layui-form-label">
+									<span>类</span><span>型 :</span>
+								</label>
+								<div class="layui-input-block">
+									<volist name="type" id="vo">
+										<input type="radio" name="recruit_type" value="{$vo['type_id']}" title="{$vo['type_name']}" <eq name='key' value='0'>checked</eq>>
+									</volist>
+								</div>
+							</div>
+							<!-- 人数 -->
+							<div class="col-md-6">
+								<label class="layui-form-label">
+									<span>人</span><span>数 :</span>
+								</label>
+								<div class="layui-input-block">
+									<input type="number" name="recruit_numbers" placeholder="请输入招聘人数" autocomplete="off" class="layui-input" required>
+								</div>
+							</div>
+							<!-- 状态 -->
+							<div class="col-md-6">
+								<label class="layui-form-label">
+									<span>状</span><span>态 :</span>
+								</label>
+								<div class="layui-input-block">
+									<input type="radio" name="is_show" value="Y" title="显示" checked>
+									<input type="radio" name="is_show" value="N" title="隐藏">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<label class="layui-form-label">
+									<span>要</span><span>求 :</span>
+								</label>
+							</div>
+							<!-- 语言 -->
+							<div class="col-md-6">
+								<label class="layui-form-label">
+									<span>语</span><span>言 :</span>
+								</label>
+								<div class="layui-input-block">
+									<input type="radio" name="language" value="ZH" title="中文" checked>
+									<input type="radio" name="language" value="EN" title="英文">
+								</div>
+							</div>
+
+						</div>
+						<input type="hidden" name="recruit_id">
+					</form>
+					<div class="row">
+						<!-- 任职要求 -->
+						<div class="col-md-12">
+							<div class="summernote">
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group" role="group">
+							<button type="button" id="newPostSubmit" class="btn btn-default" ><i class="glyphicon glyphicon-ok"></i></button>
+						</div>
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- newPost modal end -->
+	<!-- postDetail modal -->
+	<div class="modal fade" id="postDetail">
+		<div class="modal-dialog" style="width: 50%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">职位详情</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<label class="layui-form-label">
+								<span>职</span><span>位</span><span>名</span><span>称:</span>
+							</label>
+							<div class="layui-input-block" style="position: relative;">
+								<div class="layui-form-label recruit_position" style="width: 100%;"></div>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<label class="layui-form-label">
+								<span>任</span><span>职</span><span>要</span><span>求:</span>
+							</label>
+						</div>
+						<div class="col-md-12">
+							<div class="recruit_detial clearfix" style="min-height: 200px;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- postDetail modal end -->
+	<script src="__HADMIN__/js/jquery.min.js"></script>
+	<script src="__HADMIN__/js/bootstrap_m.min.js"></script>
+
+	<!-- datatables -->
+	<script src="__HADMIN__/js/plugins/dataTables/jquery.dataTables.js"></script>
+	<script src="__HADMIN__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+	<!-- layer -->
+	<script src="__HADMIN__/js/plugins/layer/layer.min.js"></script>
+	<script src="__VENDOR__/layui/layui.js"></script>
+	<!-- validate -->
+	<script src="__VENDOR__/jqueryValidate/jquery.validate.min.js"></script>
+	<script src="__VENDOR__/jqueryValidate/messages_zh.min.js"></script>
+
+	<!-- summernote -->
+	<script src="__HADMIN__/js/plugins/summernote/summernote.min.js"></script>
+	<script src="__HADMIN__/js/plugins/summernote/summernote-zh-CN.js"></script>
+
+	<!-- sweetalert -->
+	<script src="__HADMIN__/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+	<script src="__ADMIN__/js/m.js"></script>
+	<include file="Home@Layout/preFunction" />
+	<script type="text/javascript">
+		$(document).ready(function() {
+			oTable = $('#postTb').DataTable({
+				"bProcessing": true,
+				"sPaginationType": "full_numbers",
+				// "scrollY": tableHeight,
+				// "scrollCollapse": "true",
+				/*自定义语言*/
+				"oLanguage": {
+					"sProcessing": "正在加载数据...",
+					"sLengthMenu": "每页显示 _MENU_ 条记录",
+					"sZeroRecords": "抱歉， 没有找到",
+					"sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+					"sInfoEmpty": "没有数据",
+					"sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+					"oPaginate": {
+						"sFirst": "首页",
+						"sPrevious": "前一页",
+						"sNext": "后一页",
+						"sLast": "尾页"
+					},
+					"sZeroRecords": "没有职位招聘信息",
+					"sSearch": "搜索",
+				},
+				/*请求方法*/
+				"ajax":{
+					"url":"__URL__/getPostInfo",
+					"data":function(d){
+
+					}
+				},
+				/*向后台传参*/
+				"fnServerParams": function(aoData) {
+					aoData.push({
+						"name": "name",
+						"value": "value"
+					});
+				},
+				/*列，mData的个数要与html中的td一致*/
+				"aoColumns": [
+					{"mData":"num"},
+					{
+						"data":"recruit_position",
+						"class":"text-left"
+					},
+					{"mData":"recruit_date"},
+					{
+						"data":"recruit_type",
+						"class":"text-left"
+					},
+					{
+						"data":"recruit_numbers",
+						"class":"text-right"
+					},
+					{
+						"data":"recruit_viewtimes",
+						"class":"text-right"
+					},
+					{
+						"data":"recruit_detial",
+						"render":function(data,type,full,meta){
+							return '<button type="button" id="showDetail" class="btn btn-info btn-outline">查看详情</button>';
+						}
+					},
+					{
+						"data":"is_show",
+						"render":function(data,type,full,meta){
+							return data == 'Y' ? '<span class="text-success">显示</span>' : '<span class="text-warning">隐藏</span>';
+						}
+					},
+					{
+						"data":"is_show",
+						"render":function(data,type,full,meta){
+							var state = '',
+								sOut = '<div class="btn-group"><button type="button" id="edit" class="btn btn-success">编辑</button>';
+							state = data == 'Y' ? '<button type="button" id="hide" class="btn btn-warning">隐藏</button>' : '<button type="button" id="show" class="btn btn-info">显示</button>';
+							sOut += state;
+							sOut += '<button type="button" id="delete" class="btn btn-danger">删除</button></div>';
+
+							return sOut;
+						}
+					},
+				],
+				"drawCallback": function( settings ) {
+		            // 渲染完毕后的回调
+
+	        	}
+			});
+			// 表单验证初始化
+			$("#newPostForm").validate({
+			 	messages:{
+		            recruit_numbers:{
+		                required:"招聘人数必填"
+		            },
+			    }
+			});
+		});
+		// 销毁模态框
+		$('#newPost').on("hidden.bs.modal", function(){
+			$('input').val(null);
+			destroy();
+			$(".refresh").load(location.href+" .refresh");
+		});
+		// 显示模态框
+		$('#newPost').on("show.bs.modal", function(){
+			form.render();
+			edit();
+		});
+		//获取表格中选中的值
+		function getDataTablesByClass(element,clsName){
+			var res;
+			for(var i=0 ;i< $('#'+element).DataTable().rows('.'+clsName).data().length;i++){
+	   			res = $('#'+element).DataTable().rows('.'+clsName).data()[i];
+			}
+			return res;
+		}
+		// layui.form 初始化
+		layui.use('form', function(){
+		  	form = layui.form();
+		});
+
+		// summernote 初始化
+		var edit = function () {
+		    $('.summernote').summernote({
+		        lang: 'zh-CN',
+		        focus: true,
+		        height: 300,
+		    });
+		};
+		var save = function () {
+		    var aHTML = $('.summernote').code(); //save HTML If you need(aHTML: array).
+		    $('.summernote').destroy();
+		};
+		var destroy = function () {
+		    $('.summernote').destroy();
+		    $('.summernote').empty();
+		};
+
+		$('.table').on('click','tbody td button',function(event){
+			oTable.$('tr.selected').removeClass('selected');
+           	$(this).parents('tr').addClass("selected");
+		});
+		// 查看职位详情
+		$('.table').on('click','#showDetail',function() {
+			var data = getDataTablesByClass('postTb','selected');
+			$('.recruit_position').text(data['recruit_position']);
+			$('.recruit_detial').html(data['recruit_detial']);
+			$('#postDetail').modal('show');
+		});
+		// 发布职位
+		$('#newPostSubmit').click(function(){
+			$('#newPostForm').submit();
+		});
+	    $.validator.setDefaults({
+			submitHandler: function() {
+				$('#newPost').modal('hide');
+				var newPostData = {},
+					formData = $("#newPostForm").serializeArray();
+				$(formData).each(function(i) {
+					newPostData[this.name] = this.value;
+				});
+				newPostData['recruit_detial'] = $('.summernote').code();
+				$.ajax({
+					cache: true,
+					type: "POST",
+					url: '__URL__/newPost',
+					data: newPostData,
+					dataType:"json",
+					async: true,
+					beforeSend:function(xhr){
+						loading.add();
+					},
+					success: function(result) {
+						loading.remove();
+						if (result.status == 1) {
+							oTable.ajax.reload();
+						}
+					}
+				});
+			}
+		});
+		// 编辑
+		$('.table').on('click','#edit',function(){
+			var data = getDataTablesByClass('postTb','selected');
+			$('[name="recruit_id"]').val(data.recruit_id);
+			$('[name="position_id"]').find('option[value="'+data.position_id+'"]').attr('selected', 'selected');
+			$('[name="recruit_type"]:radio[value='+data.type_id+']').attr('checked',true);
+			$('[name="is_show"]:radio[value='+data.is_show+']').attr('checked',true);
+			$('[name="language"]:radio[value='+data.language+']').attr('checked',true);
+			form.render();
+			$('[name="recruit_numbers"]').val(data.recruit_numbers);
+			$('.summernote').html(data.recruit_detial);
+			$('#newPost').modal('show');
+		});
+		// 隐藏
+		$('.table').on('click','#hide',function(){
+			var data = getDataTablesByClass('postTb','selected');
+			swal({
+				title: "确认隐藏 ["+data.recruit_position+"]",
+				text: "隐藏后可以手动设置其显示",
+				type: "info",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				showLoaderOnConfirm: true,
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+			},function(){
+				$.ajax({
+					cache: true,
+					type: "POST",
+					url: '__URL__/hidePost',
+					data: {
+						'recruit_id': data.recruit_id
+					},
+					dataType:"json",
+					async: true,
+					success: function(result) {
+						if (result.status == 1) {
+							swal.close();
+							oTable.ajax.reload();
+						}
+					}
+				});
+			});
+		});
+		// 显示
+		$('.table').on('click','#show',function(){
+			var data = getDataTablesByClass('postTb','selected');
+			swal({
+				title: "确认显示 ["+data.recruit_position+"]",
+				text: "显示后可以手动设置其隐藏",
+				type: "info",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				showLoaderOnConfirm: true,
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+			},function(){
+				$.ajax({
+					cache: true,
+					type: "POST",
+					url: '__URL__/showPost',
+					data: {
+						'recruit_id': data.recruit_id
+					},
+					dataType:"json",
+					async: true,
+					success: function(result) {
+						if (result.status == 1) {
+							swal.close();
+							oTable.ajax.reload();
+						}
+					}
+				});
+			});
+		});
+		// 删除
+		$('.table').on('click','#delete',function(){
+			var data = getDataTablesByClass('postTb','selected');
+			swal({
+				title: "确认删除 ["+data.recruit_position+"]",
+				text: "删除后无法恢复",
+				type: "warning",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				showLoaderOnConfirm: true,
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+			},function(){
+				$.ajax({
+					cache: true,
+					type: "POST",
+					url: '__URL__/deletePost',
+					data: {
+						'recruit_id': data.recruit_id
+					},
+					dataType:"json",
+					async: true,
+					success: function(result) {
+						if (result.status == 1) {
+							swal.close();
+							oTable.ajax.reload();
+						}
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

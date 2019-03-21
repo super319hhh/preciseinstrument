@@ -1,0 +1,32 @@
+/*表单样式*/
+.layui-form-label{
+	width: 70px;
+}
+.layui-input-block{
+	margin-left: 80px;
+}
+.layui-textarea{
+	min-height: 75px;
+}
+.layui-form-label{
+	display: flex;
+	justify-content: space-between;
+	padding-left: 0;
+	padding-right: 0;
+}
+.layui-form-radio i{
+	font-size: 15px;
+}
+.modal-footer{
+	padding: 0;
+}
+.modal-footer .btn-group .btn{
+	padding: 10px 12px;
+	border-radius: 0;
+	box-sizing: border-box;
+}
+label.error{
+	position: absolute;
+	right: 20px;
+	top: 10px;
+}

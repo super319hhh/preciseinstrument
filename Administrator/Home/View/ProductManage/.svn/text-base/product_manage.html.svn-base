@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title> 谱祥伟业科技 </title>
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="__HADMIN__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__HADMIN__/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="__HADMIN__/css/animate.css" rel="stylesheet">
+    <link href="__HADMIN__/css/style.css?v=4.1.0" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="__HADMIN__/css/plugins/dataTables/dataTables.bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="__HADMIN__/css/plugins/sweetalert/sweetalert.css"/>
+    <link rel="stylesheet" type="text/css" href="__HADMIN__/css/plugins/summernote/summernote.css"/>
+    <link rel="stylesheet" type="text/css" href="__HADMIN__/css/plugins/summernote/summernote-bs3.css"/>
+    <link rel="stylesheet" type="text/css" href="__HADMIN__/css/plugins/uploadify/uploadify.css"/>
+    <include file="Home@Layout/preFunction" />
+    <!--<link rel="stylesheet" type="text/css" href="__HADMIN__/js/plugins/fileinput/css/fileinput.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="__HADMIN__/js/plugins/fileinput/css/normalize.css"/>-->
+    <style>
+        /*重置sb-admin箭头样式*/
+        .table.dataTable thead .sorting_asc:after,
+        .table.dataTable thead .sorting_desc:after,
+        .table.dataTable thead .sorting:after{
+            content: "";
+        }
+        #applicationInfomodelOperationID
+        {
+            /*z-index: 4 !important;*/
+        }
+        #KMC_MODEL_LOADING{
+            z-index:4000 !important;
+        }
+        #KMC_MODEL_LOADING>.loader{
+            z-index:4002 !important;
+        }
+        #KMC_MODEL_LOADING div{
+            z-index:4001 !important;
+
+        }
+    </style>
+</head>
+<body>
+<block name="content">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"style="margin-left: 20px">管理产品</h1>
+        </div><!-- /.col-lg-12 -->
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="clearfix">
+                        <form action="" class="form-inline">
+                            <div class="form-group">
+                                <span class="control-label">请选择产品类型：</span>
+                                <select id="dateSearch" class="form-control"style="width: 35%">
+                                    <option value="" >全部</option>
+                                    <volist name="res" id="vo">
+                                        <option value="{$vo.type_id}">{$vo.type_name}</option>
+                                    </volist>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-outline btn-primary pull-right"   id="addGroup">新增产品</button>
+                        </form>
+                    </div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <table width="100%" class="table table-striped table-bordered table-hover KTable" id="applicationInfo" style="text-align: center;">
+                        <thead>
+                        <tr style="text-align: center">
+                            <!--<th width="10%">申请类型</th>-->
+                            <th width="15%">产品类型</th>
+                            <th width="5%">语言类型</th>
+                            <th width="15%">编号</th>
+                            <th width="16%">产品名称</th>
+                            <th width="10%">详情</th>
+                            <th width="10%">状态</th>
+                            <th width="10%">是否主页展示</th>
+                            <th >操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table><!-- /.table-responsive -->
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div><!-- /.col-lg-12 -->
+    </div><!-- /.row -->
+    <!--模态框-->
+    <!--新增编辑-->
+    <div class="modal fade" id="applicationInfomodelOperationID" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none; font-size: 18px">
+        <div class="modal-dialog  modal-lg "style="width: 100%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title" id=""style="text-align: center">新增产品</h2>
+                </div>
+                <div class="modal-body">
+                    <form id="applicationInfomodelOperationFormID" class="form-horizontal clearfix" role="form" >
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="kInputUploader" class="col-sm-4 control-label">上传主图：</label>
+                                <div class="col-sm-8" id="message">
+                                    <div class="col-sm-10"style="border: solid 1px #000000;height: 200px">
+                                        <!--展示缩略图-->
+                                        <img src="" alt=""id="kImgShowThumb" height="100%" width="100%" style="display: none;">
+                                        <!--封面图字段-->
+                                        <input type="hidden"name="main_pic"id="kInputImagePath">
+                                    </div>
+                                    <div class="col-sm-7" id="images" style="margin-top: 20px">
+                                        <input type="file" id="kInputUploader">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="is_show_on_main" class="col-sm-4 control-label">选择语言类型：</label>
+                                <div class="col-sm-4" style="margin-top: 4px;">
+                                    <select class="form-control " id="language" name="language">
+                                        <option value="ZH">中文</option>
+                                        <option value="EN">英文</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="is_show_on_main" class="col-sm-4 control-label">选择产品种类：</label>
+                                <div class="col-sm-4" style="margin-top: 4px;"id="type">
+                                    <select class="form-control " id="product_type" name="product_type">
+                                        <volist name="res" id="vo">
+                                            <option value="{$vo.type_id}">{$vo.type_name}</option>
+                                        </volist>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="product_name" class="col-sm-4 control-label">产品名称：</label>
+                                <div class="col-sm-4" style="margin-top: 4px;">
+                                    <input type="text" class="form-control" id="product_name" name="product_name" placeholder="请输入产品名称" style="margin-top: 4px;">
+                                </div>
+                                <span id="productName" style="color: red"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="product_num" class="col-sm-4 control-label">编号：</label>
+                                <div class="col-sm-4" style="margin-top: 4px;">
+                                    <input type="text" class="form-control" id="product_num" name="product_num" placeholder="请输入编号" style="margin-top: 4px;">
+                                </div>
+                                <span id="productNum" style="color: red"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="is_show_on_main" class="col-sm-4 control-label">是否主页展示：</label>
+                                <div class="col-sm-4" style="margin-top: 4px;" id="is_show_on_mains">
+                                    <select class="form-control " id="is_show_on_main" name="is_show_on_main">
+                                        <option value="N">不显示</option>
+                                        <option value="Y">显示</option>
+                                    </select>
+                                    <span id="worng"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="is_show" class="col-sm-4 control-label">是否展示：</label>
+                                <div class="col-sm-4" style="margin-top: 4px;">
+                                    <select class="form-control " id="is_show" name="is_show">
+                                        <option value="Y">显示</option>
+                                        <option value="N">隐藏</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <div class="" id="add_fwb" >
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="hidden"></div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="modelOperationFormSubmitID">提交</button>
+                    <!--<a href="/ElevatorMaintenanceCloudPlatform/index.php/Maintenance/PropertyContract/ajaxUploadImage" title="上传选中文件" class="btn btn-default kv-fileinput-upload fileinput-upload-button"><i class="glyphicon glyphicon-upload"></i> 上传</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="selectMessages" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none; font-size: 18px">
+        <div class="modal-dialog  modal-lg"style="width: 100%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title" style="text-align: center">查看产品详情</h2>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal clearfix" role="form">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <div  id="messages">
+                                    <div style="border: solid 1px #000000;height: 400px">
+                                        <!--展示缩略图-->
+                                        <img src="" alt=""id="kImgShow" height="100%" width="100%" style="display: none;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="is_show_on_main" class="col-sm-3 control-label">产品种类：</label>
+                                <div class="col-sm-4" style="margin-top: 4px;">
+                                    <span id="productype"></span>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="product_name" class="col-sm-3 control-label">产品名称：</label>
+                                <div class="col-sm-4" style="margin-top: 4px;">
+                                    <span id="productnames"></span>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="product_num" class="col-sm-3 control-label">编号：</label>
+                                <div class="col-sm-4" style="margin-top: 4px;">
+                                    <span id="productnums"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <label for="product_num" class="col-sm-2 control-label">说明：</label>
+                                <div class="" id="product_detail"style="width: 80%;margin-left: 17%;margin-top: 1%" >
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <!--<a href="/ElevatorMaintenanceCloudPlatform/index.php/Maintenance/PropertyContract/ajaxUploadImage" title="上传选中文件" class="btn btn-default kv-fileinput-upload fileinput-upload-button"><i class="glyphicon glyphicon-upload"></i> 上传</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<!-- 全局js -->
+<script src="__HADMIN__/js/jquery.min.js?v=2.1.4"></script>
+<script src="__HADMIN__/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="__HADMIN__/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="__HADMIN__/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="__HADMIN__/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="__HADMIN__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="__HADMIN__/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!--ueditor副文本编辑器-->
+<script src="__HADMIN__/js/plugins/summernote/summernote.min.js"></script>
+<script src="__HADMIN__/js/plugins/summernote/summernote-zh-CN.js"></script>
+<!-- 自定义js -->
+<!-- 第三方插件 -->
+<script src="__HADMIN__/js/plugins/pace/pace.min.js"></script>
+
+<!--<script src="__HADMIN__/js/plugins/fileinput/js/fileinput.js" type="text/javascript"></script>-->
+<script src="__HADMIN__/css/plugins/uploadify/jquery.uploadify.js" type="text/javascript"></script>
+<!--<script src="__HADMIN__/js/plugins/fileinput/js/fileinput_locale_zh.js" type="text/javascript"></script>-->
+</body>
+<script type="text/javascript">
+    var productType='';
+    var oTable;
+    $(document).ready(function() {
+        var tableHeight = document.body.clientHeight * 0.65 + 'px';
+        oTable = $('#applicationInfo').dataTable({
+            "responsive": false,
+            "bProcessing": true,
+            "sPaginationType": "full_numbers",
+            "bDestory": true,
+            "bRetrieve": true,
+//            "searching":false,
+//            "paging":false,
+            "dom": '<"top"l<"toolbar">f>rt<"bottom"ip><"clear">',
+            /*每页数量*/
+            "aLengthMenu": [[10, 35, 50, -1], ["10条", "35条", "50条", "全部"]],//二组数组，第一组数量，第二组说明文字;
+            /*垂直滚动条*/
+            "scrollY":tableHeight,
+            /*自定义语言*/
+            "oLanguage": {
+                "sProcessing": "正在加载数据...",
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+//                    "sZeroRecords": "抱歉， 没有找到",
+                "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据&nbsp&nbsp&nbsp",
+                "sInfoEmpty": "没有数据",
+                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                "sZeroRecords": "还未有产品！！",
+                "sSearch": "搜索 ",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "前一页",
+                    "sNext": "后一页",
+                    "sLast": "尾页"
+                },
+            },
+            /*请求方法*/
+            "sAjaxSource": "__URL__/selectProduct",
+            /*向后台传参*/
+            "fnServerParams": function (aoData) {
+                aoData.push({
+                    "name": "product_type",
+                    "value": productType
+                });
+            },
+            /*列，mData的个数要与html中的td一致*/
+            "aoColumns": [
+                {"mData": "product_type"},
+                {
+                    "data":"language",
+//                        "type":"contract_id",
+                    "render":function(data){
+
+                        if(data == 'EN')
+                        {
+                            return '英文'
+                        }else
+                        {
+                            return '中文';
+                        }
+                    }
+                },
+                {"mData": "product_num"},
+                {"mData": "product_name"},
+                {
+                    "data":"product_id",
+                    "defaultContent":"",
+//                        "type":"contract_id",
+                    "render":function(data){
+
+                        return  '<button type="button"  id="SelectMessage" class="btn btn-info">查看详情</button> '
+                    }
+                },
+                {
+                    "data":"is_show",
+                    "defaultContent":"",
+//                        "type":"contract_id",
+                    "render":function(data){
+                        if(data == 'Y')
+                        {
+                            return data = '<button type="button" class="btn btn-success" id="show-caocuo" attr-id="'+data+'">已显示</button>';
+                        }
+                        else
+                        {
+                            return  data = '<button type="button" class="btn btn-warning" id="delete-caocuo" attr-id="'+data+'">已隐藏</button>';
+                        }
+
+
+                    }
+                },
+                {
+                    "data":"is_show_on_main",
+                    "defaultContent":"",
+//                        "type":"contract_id",
+                    "render":function(data){
+                        if(data == 'N')
+                        {
+                            return data = '<button type="button" class="btn btn-warning" id="show-main" attr-id="'+data+'">未展示</button>';
+                        }
+                        else
+                        {
+                            return  data = '<button type="button" class="btn btn-success" id="delete-main" attr-id="'+data+'">已展示</button>';
+                        }
+
+
+                    }
+                },
+                {
+                    "data":"product_id",
+                    "defaultContent":"",
+//                        "type":"contract_id",
+                    "render":function(data){
+
+                        return  '<button type="button"  id="AlertMessage" class="btn btn-success">修改</button> ' +
+                                '<button id="deleteMessage" type="button" class="btn btn-danger">删除</button>';
+                    }
+                },
+
+            ],
+
+        });
+    });
+
+    $('#addGroup').click(function () {
+        $("#applicationInfomodelOperationID").modal();
+        $('#add_fwb').summernote({
+            height: '500px',
+            minHeight: 200,
+            maxHeight: null,
+            focus: true
+        });
+        var postData = {};
+        postData['language'] = 'ZH';
+        $.ajax({
+            type:'post',
+            data:postData,
+            url:"__URL__/selectTypes",
+            dataType:'json',
+            success:function(result){
+                var res = result.msg;
+                console.log(res);
+                var sOut = '<select class="form-control " id="product_type" name="product_type">';
+//                console.log(res);
+                for( var i=0;i<res.length;i++){
+                        sOut+='<option value="'+res[i].type_id+'">'+res[i].type_name+'</option>';
+//                    console.log(res[i]);
+                }
+                sOut+='</select>';
+//                console.log(sOut);
+                $('#type').html(sOut);
+            },
+        });
+    })
+    $('#language').change(function () {
+        var language = $('#language').val();
+       var postData = {};
+        postData['language'] = language;
+        $.ajax({
+            type:'post',
+            data:postData,
+            url:"__URL__/selectTypes",
+            dataType:'json',
+            success:function(result){
+                var res = result.msg;
+                var sOut = '<select class="form-control " id="product_type" name="product_type">';
+//                console.log(res);
+                for( var i=0;i<res.length;i++){
+//                    console.log(res[i]);
+                    sOut+='<option value="'+res[i].type_id+'">'+res[i].type_name+'</option>';
+                }
+                sOut+='</select>';
+//                console.log(sOut);
+                $('#type').html(sOut);
+            },
+        });
+
+    })
+    //图片上传插件
+    $('#kInputUploader').uploadify({
+        'swf':'__HADMIN__/css/plugins/uploadify/uploadify.swf',
+        'uploader':'__URL__/ajaxUploadImage',
+        'buttonText':'上传图片',
+        'fileTypeExts':'*.gif;*.png;*.jpg',
+        'fileTypeDecs':'Image File',
+        'fileObjName':'file',
+        'onUploadSuccess':function (file,data,response) {
+            // console.log(data);
+            if(response)
+            {
+                var res = JSON.parse(data);
+                // console.log(res.image_path);
+                $('#kImgShowThumb').attr('src',res.image_path).show();
+                $('#kInputImagePath').attr('value',res.image_path);
+                $('#images').css('margin-left','5%')
+                $('#deletes').append('<div id="delete"><button id="deleteImage"  class="btn btn-primary" type="button" >移除图片</button></div>');
+            }
+        },
+    });
+
+    //隐藏操作
+    $('.table').on('click','#show-caocuo',function () {
+        $(".table tr").removeClass('selected');
+        $(this).parent().parent().addClass('selected');
+        swal({
+            title: '确认隐藏?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '确认隐藏',
+            cancelButtonText: '取消隐藏',
+//                cancelButtonText：'取消删除'
+        },function() {
+            loading.add();
+            var arr = getDataTablesSelectedData('applicationInfo');
+            console.log(arr[0])
+            var postData = {};
+            postData['product_id']=arr[0].product_id;
+            postData['is_show'] = 'N';
+//            console.log(postData);
+            $.ajax({
+                type:'post',
+                url:"__URL__/alertShow",
+                data:postData,
+                dataType:'json',
+                success:function(result){
+//                console.log(result);
+                    loading.remove();
+                    if(result.status == 0)
+                    {
+                        $("#ryModelOperations").modal('hide');
+                        oTable.api().ajax.reload();
+                    }else
+                    {
+                        swal({
+                            title: '更改失败!',
+                            text: '请重试！',
+                            type: 'warning',
+                            timer: 3000
+                        })
+                    }
+
+
+
+                },
+            });
+        });
+
+    });
+    //展示操作
+    $('.table').on('click','#delete-caocuo',function () {
+        $(".table tr").removeClass('selected');
+        $(this).parent().parent().addClass('selected');
+        swal({
+            title: '确认展示?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '确认展示',
+            cancelButtonText: '取消展示',
+//                cancelButtonText：'取消删除'
+        },function() {
+            loading.add();
+            var arr = getDataTablesSelectedData('applicationInfo');
+            console.log(arr[0])
+            var postData = {};
+            postData['product_id']=arr[0].product_id;
+            postData['is_show'] = 'Y';
+//            console.log(postData);
+            $.ajax({
+                type:'post',
+                url:"__URL__/alertShow",
+                data:postData,
+                dataType:'json',
+                success:function(result){
+//                console.log(result);
+                    loading.remove();
+                    if(result.status == 0)
+                    {
+                        $("#ryModelOperations").modal('hide');
+                        oTable.api().ajax.reload();
+                    }else
+                    {
+                        swal({
+                            title: '更改失败!',
+                            text: '请重试！',
+                            type: 'warning',
+                            timer: 3000
+                        })
+                    }
+
+
+
+                },
+            });
+        });
+
+    });
+    //取消展示
+    $('.table').on('click','#delete-main',function () {
+        $(".table tr").removeClass('selected');
+        $(this).parent().parent().addClass('selected');
+        swal({
+            title: '取消展示?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '取消展示',
+            cancelButtonText: '我再想想',
+//                cancelButtonText：'取消删除'
+        },function() {
+            loading.add();
+            var arr = getDataTablesSelectedData('applicationInfo');
+            console.log(arr[0])
+            var postData = {};
+            postData['product_id']=arr[0].product_id;
+            postData['is_show_on_main'] = 'N';
+//            console.log(postData);
+            $.ajax({
+                type:'post',
+                url:"__URL__/alertMainShow",
+                data:postData,
+                dataType:'json',
+                success:function(result){
+//                console.log(result);
+                    loading.remove();
+                    if(result.status == 0)
+                    {
+                        $("#ryModelOperations").modal('hide');
+                        oTable.api().ajax.reload();
+                    }else
+                    {
+                        swal({
+                            title: '更改失败!',
+                            text: '请重试！',
+                            type: 'warning',
+                            timer: 3000
+                        })
+                    }
+
+
+
+                },
+            });
+        });
+
+    });
+    //确认展示
+    $('.table').on('click','#show-main',function () {
+        $(".table tr").removeClass('selected');
+        $(this).parent().parent().addClass('selected');
+        var arr = getDataTablesSelectedData('applicationInfo');
+        console.log(arr[0]);
+        if(arr[0].is_show == 'N')
+        {
+//            alert('asdasd')
+            return swal({
+                title: '取消隐藏后再操作!',
+                text: '请重试！',
+                type: 'warning',
+                timer: 3000
+            })
+        }
+        var count = {};
+        count['language']= arr[0].language;
+        $.ajax({
+            type:'post',
+                url:"__URL__/selectMainShow",
+            data:count,
+            dataType:'json',
+            success:function(result){
+                if(result.msg == 6)
+                {
+                    return swal({
+                        title: '已超过允许设置的上限!',
+                        text: '请重试！',
+                        type: 'warning',
+                        timer: 3000
+                    })
+                }else
+                {
+                    swal({
+                        title: '确认展示?',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#DD6B55',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '确认展示',
+                        cancelButtonText: '取消展示',
+//                cancelButtonText：'取消删除'
+                    },function() {
+                        loading.add();
+                        var postData = {};
+                        postData['product_id']=arr[0].product_id;
+                        postData['is_show_on_main'] = 'Y';
+//            console.log(postData);
+                        $.ajax({
+                            type:'post',
+                            url:"__URL__/alertMainShow",
+                            data:postData,
+                            dataType:'json',
+                            success:function(result){
+//                console.log(result);
+                                if(result.status == 0)
+                                {
+                                    $("#ryModelOperations").modal('hide')
+                                    loading.remove();
+                                    oTable.api().ajax.reload();
+                                }else
+                                {
+                                    loading.remove();
+                                    swal({
+                                        title: '更改失败!',
+                                        text: '请重试！',
+                                        type: 'warning',
+                                        timer: 3000
+                                    })
+                                }
+
+
+
+                            },
+                        });
+                    });
+                }
+
+            },
+        });
+    });
+    //点击修改按钮事件
+    $('.table').on('click','#AlertMessage',function () {
+        $('#applicationInfomodelOperationID').modal();
+        $(".table tr").removeClass('selected');
+        $(this).parent().parent().addClass('selected');
+        var arr = getDataTablesSelectedData('applicationInfo');
+//        console.log(arr[0]);
+        if(arr[0].language == 'EN')
+        {
+            var postData = {};
+            postData['language'] = arr[0].language;
+            $.ajax({
+                type:'post',
+                data:postData,
+                url:"__URL__/selectTypes",
+                dataType:'json',
+                success:function(result){
+                    var res = result.msg;
+                    var sOut = '<select class="form-control " id="product_type" name="product_type">';
+//                console.log(res);
+                    for( var i=0;i<res.length;i++){
+                        if(arr[0].type_id == res[i].type_id)
+                        {
+                            sOut+='<option value="'+res[i].type_id+'" selected>'+res[i].type_name+'</option>';
+                        }else
+                        {
+                            sOut+='<option value="'+res[i].type_id+'">'+res[i].type_name+'</option>';
+                        }
+//                    console.log(res[i]);
+
+                    }
+                    sOut+='</select>';
+//                console.log(sOut);
+                    $('#type').html(sOut);
+                },
+            });
+        }
+        $('#kImgShowThumb').attr('src',arr[0].main_pic).show();
+        $('#product_name').val(arr[0].product_name);
+        $('#product_num').val(arr[0].product_num);
+        $('#kInputImagePath').val(arr[0].main_pic);
+        $('#hidden').append('<input type="hidden" name ="product_id" value="'+arr[0].product_id+'"/>');
+        for (var i =0;i<$('#product_type option').length;i++)
+        {
+            if($('#product_type option').eq(i).val() == arr[0].type_id)
+            {
+                $('#product_type option').eq(i).prop('selected',true)
+            }
+        }
+        for (var i =0;i<$('#is_show_on_main option').length;i++)
+        {
+            if($('#is_show_on_main option').eq(i).val() == arr[0].is_show_on_main)
+            {
+                $('#is_show_on_main option').eq(i).prop('selected',true)
+            }
+        }
+        for (var i =0;i<$('#is_show option').length;i++)
+        {
+            if($('#is_show option').eq(i).val() == arr[0].is_show)
+            {
+                $('#is_show option').eq(i).prop('selected',true)
+            }
+        }
+        for (var i =0;i<$('#language option').length;i++)
+        {
+            if($('#language option').eq(i).val() == arr[0].language)
+            {
+                $('#language option').eq(i).prop('selected',true)
+            }
+        }
+
+
+        $('#add_fwb').html(arr[0].product_detail);
+
+        $('#add_fwb').summernote({
+            height: '500px',
+            minHeight: 200,
+            maxHeight: null,
+            focus: true
+        });
+    })
+
+    //点击查看详情按钮事件
+    $('.table').on('click','#SelectMessage',function () {
+        $('#selectMessages').modal();
+        $(".table tr").removeClass('selected');
+        $(this).parent().parent().addClass('selected');
+        var arr = getDataTablesSelectedData('applicationInfo');
+        $('#kImgShow').attr('src',arr[0].main_pic).show();
+        $('#productype').html(arr[0].product_type);
+        $('#productnames').html(arr[0].product_name);
+        $('#productnums').html(arr[0].product_num);
+        $('#product_detail').html(arr[0].product_detail);
+
+
+
+    })
+    //删除产品
+    $('.table').on('click','#deleteMessage',function () {
+        $(".table tr").removeClass('selected');
+        $(this).parent().parent().addClass('selected');
+
+        swal({
+            title: '是否确认删除?',
+            text: "删除以后将无法恢复!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '确认删除',
+            cancelButtonText: '取消删除',
+//                cancelButtonText：'取消删除'
+        },function() {
+            loading.add();
+            var arr = getDataTablesSelectedData('applicationInfo');
+            var postData = {};
+            postData['product_id']=arr[0].product_id;
+            $.ajax({
+                type:'post',
+                data:postData,
+                url:"__URL__/deleteProduct",
+                dataType:'json',
+                success:function(result){
+//                    console.log(result);
+                    loading.remove();
+                    if (result.status == 0)
+                    {
+//                        $("#applicationInfomodelOperationID").modal('hide');
+                        oTable.api().ajax.reload();
+                    }
+                    else
+                    {
+                        swal({
+                            title: '删除失败!',
+                            text: '请重试！',
+                            type: 'warning',
+                            timer: 3000
+                        })
+                    }
+                },
+            });
+        });
+
+    });
+    $("#applicationInfomodelOperationID").on('hidden.bs.modal', function () {
+//        alert('fdfd')
+        $('#add_fwb').destroy();
+        $('#add_fwb').html('');
+        $('#hidden').html('');
+        $('#kInputImagePath').val('');
+        $('#kImgShowThumb').attr('src','').hide();
+        $('#product_name').val('');
+        $('#product_num').val('');
+        $('#product_type option').attr('selected',false);
+        $('#is_show_on_main option').attr('selected',false);
+        $('#is_show option').attr('selected',false);
+        $('#language option').attr('selected',false);
+        $('#is_show_on_main').css('display','block');
+        $('#is_show_on_mains span').html('');
+        $('#type').html('<select class="form-control " id="product_type" name="product_type">'+
+                '<volist name="res" id="vo">'+
+                '<option value="{$vo.type_id}">{$vo.type_name}</option>'+
+        '</volist>'+
+        '</select>');
+    });
+
+    $('#dateSearch').change(function () {
+        var product = $('#dateSearch').val();
+        productType = product;
+        oTable.api().ajax.reload();
+    })
+
+    //获取表格中值
+    function getDataTablesSelectedData(element){
+        var res = [];
+        for(var i=0 ;i< $('#'+element).DataTable().rows('.selected').data().length;i++){
+            res[i] = $('#'+element).DataTable().rows('.selected').data()[i];
+        }
+        return res;
+    }
+    $('#modelOperationFormSubmitID').click(function () {
+
+//        alert('asdasd')
+        var formData =  $('#applicationInfomodelOperationFormID').serializeArray();
+        var postData = {};
+        $(formData).each(function (i) {
+            postData[this.name] = this.value;
+        });
+        postData['product_detail']=$('#add_fwb').code();
+//        var tex=$('#add_fwb').code();
+//        console.log(postData);
+        if(postData['main_pic'] == '')
+        {
+            return swal({
+                title: '请上传图片!',
+                text: '上传后提交！',
+                type: 'warning',
+                timer: 3000
+            })
+        }else if(postData['product_name'] == '')
+        {
+            return $('#productName').html('*请填写产品名称');
+        }else if(postData['product_num'] == '')
+        {
+            $('#productName').html('');
+            return $('#productNum').html('*请填写产品编号');
+        }
+        $('#productNum').html('');
+        loading.add();
+            $.ajax({
+                type:'post',
+                data:postData,
+                url:"__URL__/addProductManage",
+                dataType:'json',
+                success:function(result){
+//                    console.log(result);
+                    loading.remove();
+                    if (result.status == 0)
+                    {
+                        $("#applicationInfomodelOperationID").modal('hide');
+                        oTable.api().ajax.reload();
+                    }else if(result.status == 2)
+                    {
+                      return  swal({
+                            title: '超过允许首页展示的上限!',
+                            text: '请修改！',
+                            type: 'warning',
+                            timer: 3000
+                        })
+                    }
+                    else
+                    {
+                        swal({
+                            title: '添加失败!',
+                            text: '请重试！',
+                            type: 'warning',
+                            timer: 3000
+                        })
+                    }
+                },
+            });
+    })
+
+</script>
+</html>
